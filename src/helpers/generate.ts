@@ -1,29 +1,4 @@
-import { darken } from '3oilerplate'
-import { times, sampleSize, shuffle } from 'lodash'
-import randomColor from 'randomcolor'
-
-export const generatePlayers = (players: any, blocks: number) => {
-  const topLeftPosition = { x: 0, y: 0 }
-  const topRightPosition = { x: blocks, y: 0 }
-  const bottomLeftPosition = { x: 0, y: blocks }
-  const bottomRightPosition = { x: blocks, y: blocks }
-  const positions = [topLeftPosition, topRightPosition, bottomLeftPosition, bottomRightPosition]
-
-  const colors = ['blue', 'purple', 'pink']
-  const randomColors = shuffle(sampleSize(colors, players.length))
-
-  return players.map((player: any, index: number) => ({
-    ...player,
-    index,
-    ...positions[index],
-    ...players.length === 2 && {
-      ...index === 0 && topLeftPosition,
-      ...index === 1 && bottomRightPosition,
-    },
-    color: darken(randomColor({ luminosity: 'light', hue: randomColors[index] }), 1.2),
-    health: 100,
-  }))
-}
+import { times, sampleSize } from 'lodash'
 
 export const generateGrid = (blocks: number) => {
   let newGrid: any = {}
@@ -33,11 +8,25 @@ export const generateGrid = (blocks: number) => {
     const y = (i - (i % (blocks + 1))) / (blocks + 1)
     const x = i % (blocks + 1)
 
-    newGrid[`${x}/${y}`] = { x, y }
+    newGrid[`${x}/${y}`] = { x, y, stone: true }
   })
 
-  newGrid = generateStones(newGrid)
-  newGrid = generateBricks(newGrid, blocks)
+  newGrid = generateBombs(newGrid)
+  // newGrid = generateStones(newGrid)
+
+  return newGrid
+}
+
+export const generateBombs = (grid: any) => {
+  let newGrid = { ...grid }
+
+  const freeSpaces = Object.values(grid)
+
+  const newBricks = sampleSize(freeSpaces, freeSpaces.length * .1)
+
+  newBricks.forEach(({x, y}: any) => {
+    newGrid = { ...newGrid, [`${x}/${y}`]: { ...newGrid[`${x}/${y}`], bomb: true }}
+  })
 
   return newGrid
 }
@@ -45,50 +34,12 @@ export const generateGrid = (blocks: number) => {
 export const generateStones = (grid: any) => {
   let newGrid = { ...grid }
 
-  Object.values(grid).forEach((block: any) => {
-    const { x, y } = block
+  const freeSpaces = Object.values(grid)
 
-    if (y % 2 && x % 2) {
-      newGrid = { ...newGrid, [`${x}/${y}`]: { ...newGrid[`${x}/${y}`], stone: true }}
-      return true
-    }
-
-    return false
-  })
-
-  return newGrid
-}
-
-export const generateBricks = (grid: any, blocks: number) => {
-  let newGrid = { ...grid }
-
-  const freeSpaces = Object.values(grid).filter((block: any) => {
-    const { x, y } = block
-
-    const isEvenUneven = x % 2 === 1 && y % 2 === 0
-    const isUnevenEven = x % 2 === 0 && y % 2 === 1
-    const isBothUneven = x % 1 === 0 && y % 2 === 0
-
-    if (isEvenUneven || isUnevenEven || isBothUneven) {
-      const isTopLeftPosition = y < 3 && x < 3
-      const isTopRightPosition = y < 3 && x > (blocks - 3)
-      const isBottomLeftPosition = y > (blocks - 3) && x < 3
-      const isBottomRightPosition = y > (blocks - 3) && x > (blocks - 3)
-
-      const isPosition = isTopLeftPosition || isTopRightPosition || isBottomLeftPosition || isBottomRightPosition
-
-      if (!isPosition) {
-        return true
-      }
-    }
-
-    return false
-  })
-
-  const newBricks = sampleSize(freeSpaces, (60 / 100) * freeSpaces.length)
+  const newBricks = sampleSize(freeSpaces, freeSpaces.length * 0.6)
 
   newBricks.forEach(({x, y}: any) => {
-    newGrid = { ...newGrid, [`${x}/${y}`]: { ...newGrid[`${x}/${y}`], brick: true }}
+    newGrid = { ...newGrid, [`${x}/${y}`]: { ...newGrid[`${x}/${y}`], stone: true }}
   })
 
   return newGrid

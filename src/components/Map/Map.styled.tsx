@@ -30,16 +30,30 @@ export const SMapStone = s.div(({ theme }: any) => ({
   // Dark
   borderLeftColor: chroma('#fff').darken(3.5).hex(),
   borderBottomColor: chroma('#fff').darken(3.5).hex(),
+  cursor: 'pointer'
 }))
 
-export const SMapCharacter = s.div(({ theme, color }: any) => ({
+const markerColors = [
+  'blue',
+  'green',
+  'red',
+  'darkblue',
+  'red',
+  'cyan',
+  'purple',
+  'darkgrey'
+]
+
+export const SMapBombMarker = s.div(({ theme, amount }: any) => ({
   position: 'absolute',
-  backgroundColor: darken(color, 1),
-  width: '.8rem',
-  height: '.8rem',
-  margin: '.1rem',
-  borderRadius: '100%',
-  transition: 'transform .1s ease'
+  width: '1rem',
+  height: '1rem',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  color: markerColors[amount - 1],
+  fontWeight: 'bold',
+  fontSize: '.8em'
 }))
 
 export const SMapBrick = s.div(() => ({

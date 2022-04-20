@@ -1,45 +1,69 @@
-import React, { useContext } from 'react'
-import { SMap, SMapStone, SMapCharacter, SMapBrick, SMapBomb } from './Map.styled'
+import React, { useContext, useEffect, useState } from 'react'
+import { SMap, SMapStone, SMapBomb, SMapBombMarker } from './Map.styled'
 import { GameContext } from '../../context'
-import { Explosion } from '../Explosion/Explosion'
 
 export const Map = ({ style, blocks } : any) => {
-  const { grid, bombs, explosions, players }: any = useContext(GameContext)
-
-  const getBombs = () => {
-    return bombs ? Object.values(bombs).filter(({ bomb }: any) => bomb) : []
-  }
-
-  const getExplosions = () => {
-    return explosions ? Object.values(explosions).filter(({ explosion }: any) => explosion) : []
-  }
+  const { grid, setGrid }: any = useContext(GameContext)
+  const [bombMarkers, setBombMarkers] = useState<any[]>([])
 
   const getStones = () => {
     return grid ? Object.values(grid).filter(({ stone }: any) => stone) : []
   }
 
-  const getBricks = () => {
-    return grid ? Object.values(grid).filter(({ brick }: any) => brick) : []
+  const getBombs = () => {
+    return grid ? Object.values(grid).filter(({ bomb }: any) => bomb) : []
   }
 
-  const getPlayers = () => {
-    return players
-  }
+  useEffect(() => {
+    if (grid) {
+      const newBombMarkers: any[] = Object.values(grid)
+        .map((item: any) => {
+          const { x: rootX , y: rootY } = item
 
-  const getActivePlayers = () => {
-    return getPlayers().filter(({ health }: any) => health)
+          const amountBombsSurrounding = Object.values(grid)
+            .map(({ x, y, ...rest }: any) => ({ ...rest, x: Math.abs(rootX - x), y: Math.abs(rootY - y)}))
+            .filter(({ bomb, x, y }) => bomb && x < 2 && y < 2)
+            .length
+
+            return {
+              amount: amountBombsSurrounding,
+              ...item,
+            }
+        })
+        .filter(({ amount, bomb }) => amount && !bomb)
+
+      setBombMarkers(newBombMarkers)
+    }
+  }, [grid])
+
+  const breakStone = ({ x, y }: any) => {
+    const newGrid = { ...grid }
+    newGrid[`${x}/${y}`].stone = false
+    setGrid(newGrid)
   }
 
   return (
     <SMap style={{style}} blocks={blocks + 1}>
-      { getActivePlayers().map(({x, y, color}: any, index: number) => (
-        <SMapCharacter
+      { getBombs().map(({x, y}: any, index: number) => (
+        <SMapBomb
           key={index}
           s={{
-            transform: `translate3d(${x}rem, ${y}rem, 0)`
+            left: `${x}rem`,
+            top: `${y}rem`
           }}
-          color={color}
         />
+      )) }
+      { bombMarkers.map(({x, y, amount}: any, index: number) => (
+        <SMapBombMarker
+          key={index}
+          amount={amount}
+          s={{
+            left: `${x}rem`,
+            top: `${y}rem`
+          }}
+        >
+          { amount }
+        </SMapBombMarker>
       )) }
       { getStones().map(({x, y}: any, index: number) => (
         <SMapStone
@@ -48,33 +72,9 @@ export const Map = ({ style, blocks } : any) => {
             left: `${x}rem`,
             top: `${y}rem`
           }}
+          onClick={() => breakStone({ x, y })}
         />
       )) }
-      { getBricks().map(({x, y}: any, index: number) => (
-        <SMapBrick
-          key={index}
-          s={{
-            left: `${x}rem`,
-            top: `${y}rem`,
-          }}
-        />
-      )) }
-      { getBombs().map(({x, y}: any, index: number) => (
-        <SMapBomb
-          key={index}
-          s={{
-            left: `${x}rem`,
-            top: `${y}rem`,
-          }}
-        />
-      )) }
-      { getExplosions().map((explosion: any, index: number) => (
-        <Explosion
-          key={index}
-          explosion={explosion}
-          index={index}
-        />
-      ))}
     </SMap>
   )
 }
