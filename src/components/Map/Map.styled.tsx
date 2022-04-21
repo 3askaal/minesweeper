@@ -64,10 +64,10 @@ export const SMapBlock = s.div(({ theme, block, flagged, gameOver }: any) => ({
 }))
 
 const markerColors = [
-  'blue',
-  'green',
-  'red',
-  'darkblue',
+  '#07689F',
+  '#019267',
+  '#E84545',
+  '#27496D',
   'red',
   'cyan',
   'purple',
