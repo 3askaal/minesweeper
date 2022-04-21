@@ -15,6 +15,7 @@ export const SMap = s.div(({ theme, blocks }: any) => ({
   // Dark
   borderLeftColor: chroma('#fff').darken(1.5).hex(),
   borderBottomColor: chroma('#fff').darken(1.5).hex(),
+  userSelect: 'none'
 }))
 
 export const SMapBlock = s.div(({ theme, block, flagged, gameOver }: any) => ({

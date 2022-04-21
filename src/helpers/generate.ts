@@ -21,7 +21,7 @@ export const generateBombs = (grid: any) => {
 
   const freeSpaces = Object.values(grid)
 
-  const bombPositions = sampleSize(freeSpaces, freeSpaces.length * .1)
+  const bombPositions = sampleSize(freeSpaces, Math.round(freeSpaces.length * .15))
 
   bombPositions.forEach(({x, y}: any) => {
     newGrid = { ...newGrid, [`${x}/${y}`]: { ...newGrid[`${x}/${y}`], bomb: true }}
