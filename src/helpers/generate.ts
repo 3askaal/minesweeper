@@ -8,7 +8,7 @@ export const generateGrid = (blocks: number) => {
     const y = (i - (i % (blocks + 1))) / (blocks + 1)
     const x = i % (blocks + 1)
 
-    newGrid[`${x}/${y}`] = { x, y, hidden: true }
+    newGrid[`${x}/${y}`] = { x, y, block: true }
   })
 
   newGrid = generateBombs(newGrid)

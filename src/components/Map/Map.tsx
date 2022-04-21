@@ -1,59 +1,71 @@
-import React, { useContext, useState } from 'react'
-import { SMap, SMapStone, SMapBomb, SMapBombMarker } from './Map.styled'
+import React, { ReactEventHandler, ReactFragment, useContext, useState } from 'react'
+import { SMap, SMapBlock, SMapBomb, SMapBombMarker } from './Map.styled'
 import { GameContext } from '../../context'
 
 export const Map = ({ style, blocks } : any) => {
-  const { grid, setGrid, setGameOver }: any = useContext(GameContext)
+  const { grid, setGrid, gameOver, setGameOver }: any = useContext(GameContext)
 
   const getPositions = () => {
     return grid ? Object.values(grid) : []
   }
 
-  const reveal = (block: any) => {
-    if (block.bomb) {
+  const reveal = (position: any) => {
+    if (position.bomb) {
       setGameOver(true)
     }
 
     const newGrid = { ...grid }
-    newGrid[`${block.x}/${block.y}`].hidden = false
+    newGrid[`${position.x}/${position.y}`].block = false
     setGrid(newGrid)
+  }
+
+  const flag = (position: any) => {
+    const newGrid = { ...grid }
+    const item = newGrid[`${position.x}/${position.y}`]
+    newGrid[`${position.x}/${position.y}`].flag = !item.flag
+    setGrid(newGrid)
+  }
+
+  const onClick = (e: React.MouseEvent, block: any) => {
+    e.shiftKey ? flag(block) : reveal(block)
   }
 
   return (
     <SMap style={{style}} blocks={blocks + 1}>
-      { getPositions().map((block: any, index: number) => (
+      { getPositions().map((position: any, index: number) => (
         <>
-          { block.bomb ? (
+          { position.bomb ? (
             <SMapBomb
               key={`bomb-${index}`}
               s={{
-                left: `${block.x}rem`,
-                top: `${block.y}rem`
+                left: `${position.x}rem`,
+                top: `${position.y}rem`
               }}
             />
           ) : null }
-          { block.marker ? (
+          { position.marker ? (
             <SMapBombMarker
               key={`marker-${index}`}
-              amount={block.amount}
+              amount={position.amount}
               s={{
-                left: `${block.x}rem`,
-                top: `${block.y}rem`
+                left: `${position.x}rem`,
+                top: `${position.y}rem`
               }}
             >
-              { block.amount }
+              { position.amount }
             </SMapBombMarker>
           ): null}
-          { block.hidden ? (
-            <SMapStone
-              key={`stone-${index}`}
-              s={{
-                left: `${block.x}rem`,
-                top: `${block.y}rem`
-              }}
-              onClick={() => reveal(block)}
-            />
-          ) : null }
+          <SMapBlock
+            key={`block-${index}`}
+            flagged={position.flag}
+            block={position.block}
+            gameOver={gameOver}
+            s={{
+              left: `${position.x}rem`,
+              top: `${position.y}rem`
+            }}
+            onClick={(e: React.MouseEvent) => onClick(e, position)}
+          />
         </>
       )) }
     </SMap>

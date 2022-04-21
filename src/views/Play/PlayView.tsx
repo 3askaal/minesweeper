@@ -11,30 +11,13 @@ import { useHistory, useLocation } from 'react-router-dom'
 
 const PlayView = () => {
   const search = useLocation().search;
-  const {
-    players,
-    remainingTime,
-    onStartGame,
-    blocks,
-    gameOver,
-  } = useContext(GameContext)
+  const { onStartGame, blocks, gameOver } = useContext(GameContext)
 
   useKeyboardBindings()
 
   useEffect(() => {
-    // ReactGA.send({ hitType: "pageview", page: "/play" });
     onStartGame()
   }, [])
-
-  useEffect(() => {
-    // if (gameOver()) {
-    //   ReactGA4.event({
-    //     category: "actions",
-    //     action: "game:over",
-    //     label: `${players?.map(({ name }: any) => name).join(' vs. ')}. ${!remainingTime ? 'Time limit reached.' : `Winner: ${getWinner().name}`}`,
-    //   });
-    // }
-  }, [players])
 
   return (
     <Wrapper s={{ padding: ['xs', 'xs', 's'] }}>
@@ -50,7 +33,7 @@ const PlayView = () => {
           ]}
         >
           <Text s={{ textAlign: 'center' }}>
-            You revealed a bomb! Click restart to start over!
+            You stepped on a mine! Click restart to play again!
           </Text>
         </Popup>
       ) }

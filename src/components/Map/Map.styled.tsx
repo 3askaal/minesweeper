@@ -17,20 +17,49 @@ export const SMap = s.div(({ theme, blocks }: any) => ({
   borderBottomColor: chroma('#fff').darken(1.5).hex(),
 }))
 
-export const SMapStone = s.div(({ theme }: any) => ({
+export const SMapBlock = s.div(({ theme, block, flagged, gameOver }: any) => ({
   position: 'absolute',
   width: '1rem',
   height: '1rem',
   border: '0.15rem solid',
+  cursor: 'pointer',
+
   // Light
-  borderRightColor: chroma('#fff').darken(1.5).hex(),
   borderTopColor: chroma('#fff').darken(1.5).hex(),
+  borderRightColor: chroma('#fff').darken(1.5).hex(),
   // Middle
   backgroundColor: chroma('#fff').darken(2.5).hex(),
   // Dark
   borderLeftColor: chroma('#fff').darken(3.5).hex(),
   borderBottomColor: chroma('#fff').darken(3.5).hex(),
-  cursor: 'pointer'
+
+  ...(!block && {
+    opacity: 0,
+    // backgroundColor: 'transparent',
+    pointerEvents: 'none',
+  }),
+
+  ...(flagged && {
+    // Light
+    borderTopColor: chroma('#C9485B').brighten(1).hex(),
+    borderRightColor: chroma('#C9485B').brighten(1).hex(),
+    // Middle
+    backgroundColor: chroma('#C9485B').hex(),
+    // Dark
+    borderLeftColor: chroma('#C9485B').darken(1).hex(),
+    borderBottomColor: chroma('#C9485B').darken(1).hex(),
+  }),
+
+  ...(gameOver && {
+    // Light
+    borderTopColor: chroma('#FD0054').brighten(1).hex(),
+    borderRightColor: chroma('#FD0054').brighten(1).hex(),
+    // Middle
+    backgroundColor: chroma('#FD0054').hex(),
+    // Dark
+    borderLeftColor: chroma('#FD0054').darken(1).hex(),
+    borderBottomColor: chroma('#FD0054').darken(1).hex(),
+  })
 }))
 
 const markerColors = [
@@ -56,21 +85,6 @@ export const SMapBombMarker = s.div(({ theme, amount }: any) => ({
   fontSize: '.8em'
 }))
 
-export const SMapBrick = s.div(() => ({
-  position: 'absolute',
-  width: '1rem',
-  height: '1rem',
-  border: '0.2rem solid',
-  // Light
-  borderTopColor: chroma('#C19191').brighten(.2).hex(),
-  borderRightColor: chroma('#C19191').brighten(.2).hex(),
-  // Middle
-  backgroundColor: '#AA7070',
-  // Dark
-  borderLeftColor: chroma('#8B5D5D').darken(.5).hex(),
-  borderBottomColor: chroma('#8B5D5D').darken(.5).hex(),
-}))
-
 export const SMapBomb = s.div(() => ({
   position: 'absolute',
   borderRadius: '100%',
@@ -78,5 +92,5 @@ export const SMapBomb = s.div(() => ({
   height: '.8rem',
   margin: '.1rem',
   backgroundColor: '#222',
-  border: '0.15rem solid #555',
+  // border: '0.15rem solid #555',
 }))
