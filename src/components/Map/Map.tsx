@@ -1,79 +1,60 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { SMap, SMapStone, SMapBomb, SMapBombMarker } from './Map.styled'
 import { GameContext } from '../../context'
 
 export const Map = ({ style, blocks } : any) => {
-  const { grid, setGrid }: any = useContext(GameContext)
-  const [bombMarkers, setBombMarkers] = useState<any[]>([])
+  const { grid, setGrid, setGameOver }: any = useContext(GameContext)
 
-  const getStones = () => {
-    return grid ? Object.values(grid).filter(({ stone }: any) => stone) : []
+  const getPositions = () => {
+    return grid ? Object.values(grid) : []
   }
 
-  const getBombs = () => {
-    return grid ? Object.values(grid).filter(({ bomb }: any) => bomb) : []
-  }
-
-  useEffect(() => {
-    if (grid) {
-      const newBombMarkers: any[] = Object.values(grid)
-        .map((item: any) => {
-          const { x: rootX , y: rootY } = item
-
-          const amountBombsSurrounding = Object.values(grid)
-            .map(({ x, y, ...rest }: any) => ({ ...rest, x: Math.abs(rootX - x), y: Math.abs(rootY - y)}))
-            .filter(({ bomb, x, y }) => bomb && x < 2 && y < 2)
-            .length
-
-            return {
-              amount: amountBombsSurrounding,
-              ...item,
-            }
-        })
-        .filter(({ amount, bomb }) => amount && !bomb)
-
-      setBombMarkers(newBombMarkers)
+  const reveal = (block: any) => {
+    if (block.bomb) {
+      setGameOver(true)
     }
-  }, [grid])
 
-  const breakStone = ({ x, y }: any) => {
     const newGrid = { ...grid }
-    newGrid[`${x}/${y}`].stone = false
+    newGrid[`${block.x}/${block.y}`].hidden = false
     setGrid(newGrid)
   }
 
   return (
     <SMap style={{style}} blocks={blocks + 1}>
-      { getBombs().map(({x, y}: any, index: number) => (
-        <SMapBomb
-          key={index}
-          s={{
-            left: `${x}rem`,
-            top: `${y}rem`
-          }}
-        />
-      )) }
-      { bombMarkers.map(({x, y, amount}: any, index: number) => (
-        <SMapBombMarker
-          key={index}
-          amount={amount}
-          s={{
-            left: `${x}rem`,
-            top: `${y}rem`
-          }}
-        >
-          { amount }
-        </SMapBombMarker>
-      )) }
-      { getStones().map(({x, y}: any, index: number) => (
-        <SMapStone
-          key={index}
-          s={{
-            left: `${x}rem`,
-            top: `${y}rem`
-          }}
-          onClick={() => breakStone({ x, y })}
-        />
+      { getPositions().map((block: any, index: number) => (
+        <>
+          { block.bomb ? (
+            <SMapBomb
+              key={`bomb-${index}`}
+              s={{
+                left: `${block.x}rem`,
+                top: `${block.y}rem`
+              }}
+            />
+          ) : null }
+          { block.marker ? (
+            <SMapBombMarker
+              key={`marker-${index}`}
+              amount={block.amount}
+              s={{
+                left: `${block.x}rem`,
+                top: `${block.y}rem`
+              }}
+            >
+              { block.amount }
+            </SMapBombMarker>
+          ): null}
+          { block.hidden ? (
+            <SMapStone
+              key={`stone-${index}`}
+              s={{
+                left: `${block.x}rem`,
+                top: `${block.y}rem`
+              }}
+              onClick={() => reveal(block)}
+            />
+          ) : null }
+        </>
       )) }
     </SMap>
   )

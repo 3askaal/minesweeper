@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react'
 import { Container, Wrapper, Box, Popup, Button, Text } from '3oilerplate'
 import ReactGA from 'react-ga4'
-import { PlayerDetails, Map } from '../../components'
+import { Map } from '../../components'
 import { GameContext } from '../../context'
 import ReactGA4 from 'react-ga4'
 import faker from 'faker'
@@ -43,19 +43,17 @@ const PlayView = () => {
           <Map blocks={blocks} />
         </Box>
       </Container>
-      {/* { gameOver() && (
+      { gameOver && (
         <Popup
           actions={[
             <Button onClick={() => onStartGame({}, false)}>Restart</Button>
           ]}
         >
-          <Text s={{ textAlign: 'center' }}>{
-            remainingTime ?
-              `${getWinner().name} won!` :
-              `Time limit reached!`
-          } Click restart to start over!</Text>
+          <Text s={{ textAlign: 'center' }}>
+            You revealed a bomb! Click restart to start over!
+          </Text>
         </Popup>
-      ) } */}
+      ) }
     </Wrapper>
   )
 }

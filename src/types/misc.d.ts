@@ -1,3 +1,1 @@
-export interface ISettings {
-  type: 'local' | 'online'
-}
+export interface ISettings {}

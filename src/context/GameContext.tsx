@@ -2,7 +2,6 @@ import React, { createContext, useEffect, useState } from 'react'
 import { useSocket } from "use-socketio";
 import { useHistory } from 'react-router-dom'
 import { useInterval } from '../helpers/interval';
-import { generateDamage } from '../helpers/actions';
 import { Socket } from 'socket.io-client';
 import { IBomb, IExplosion, IGrid, IPlayer, ISettings } from '../types';
 import { generateGrid } from '../helpers/generate';
@@ -23,21 +22,18 @@ interface GameContextType {
 
 
 export const GameContext = createContext<GameContextType>({
-  settings: {
-    type: 'local'
-  },
-  players: []
+  settings: {},
 })
 
-interface MoveActionPayload {
-  playerIndex: number;
-  direction: 'x' | 'y';
-  movement: number;
-}
+// interface MoveActionPayload {
+//   playerIndex: number;
+//   direction: 'x' | 'y';
+//   movement: number;
+// }
 
-interface BombActionPayload {
-  playerIndex: number;
-}
+// interface BombActionPayload {
+//   playerIndex: number;
+// }
 
 export const GameProvider = ({ children }: any) => {
   const history = useHistory()
@@ -46,12 +42,12 @@ export const GameProvider = ({ children }: any) => {
   const [remainingTime, setRemainingTime] = useState<number>(1000)
   const [blocks] = useState(16)
   const [grid, setGrid] = useState<any>(null)
-  const [bombs, setBombs] = useState<any>(null)
-  const [explosions, setExplosions] = useState<any>(null)
+  const [gameOver, setGameOver] = useState(false)
 
   const onStartGame = (args?: any) => {
     setGrid(generateGrid(blocks))
     setRemainingTime(remainingTime || 3 * 60 * 1000)
+    setGameOver(false)
 
     // history.push(`/play`)
 
@@ -66,8 +62,6 @@ export const GameProvider = ({ children }: any) => {
     setRemainingTime(remainingTime - 1000)
   }, remainingTime ? 1000 : null)
 
-  const gameOver = () => !remainingTime
-
   return (
     <GameContext.Provider
       value={{
@@ -78,11 +72,8 @@ export const GameProvider = ({ children }: any) => {
         blocks,
         grid,
         setGrid,
-        bombs,
-        setBombs,
-        explosions,
-        setExplosions,
         gameOver,
+        setGameOver,
       }}
     >
       {children}

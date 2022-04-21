@@ -8,11 +8,10 @@ export const generateGrid = (blocks: number) => {
     const y = (i - (i % (blocks + 1))) / (blocks + 1)
     const x = i % (blocks + 1)
 
-    newGrid[`${x}/${y}`] = { x, y, stone: true }
+    newGrid[`${x}/${y}`] = { x, y, hidden: true }
   })
 
   newGrid = generateBombs(newGrid)
-  // newGrid = generateStones(newGrid)
 
   return newGrid
 }
@@ -22,24 +21,25 @@ export const generateBombs = (grid: any) => {
 
   const freeSpaces = Object.values(grid)
 
-  const newBricks = sampleSize(freeSpaces, freeSpaces.length * .1)
+  const bombPositions = sampleSize(freeSpaces, freeSpaces.length * .1)
 
-  newBricks.forEach(({x, y}: any) => {
+  bombPositions.forEach(({x, y}: any) => {
     newGrid = { ...newGrid, [`${x}/${y}`]: { ...newGrid[`${x}/${y}`], bomb: true }}
   })
 
-  return newGrid
-}
+  freeSpaces.forEach((position: any) => {
+    const { x: rootX , y: rootY } = position
 
-export const generateStones = (grid: any) => {
-  let newGrid = { ...grid }
+    const amountBombsSurrounding = Object.values(newGrid)
+      .map(({ x, y, ...rest }: any) => ({ ...rest, x: Math.abs(rootX - x), y: Math.abs(rootY - y)}))
+      .filter(({ bomb, x, y }) => bomb && x < 2 && y < 2)
+      .length
 
-  const freeSpaces = Object.values(grid)
+    const item = newGrid[`${rootX}/${rootY}`]
 
-  const newBricks = sampleSize(freeSpaces, freeSpaces.length * 0.6)
-
-  newBricks.forEach(({x, y}: any) => {
-    newGrid = { ...newGrid, [`${x}/${y}`]: { ...newGrid[`${x}/${y}`], stone: true }}
+    if (amountBombsSurrounding && !item.bomb) {
+      newGrid = { ...newGrid, [`${rootX}/${rootY}`]: { ...newGrid[`${rootX}/${rootY}`], marker: true, amount: amountBombsSurrounding  }}
+    }
   })
 
   return newGrid
