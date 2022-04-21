@@ -1,11 +1,13 @@
 import React, { ReactEventHandler, ReactFragment, useContext, useState } from 'react'
 import { SMap, SMapBlock, SMapBomb, SMapBombMarker } from './Map.styled'
 import { GameContext } from '../../context'
-import useLongPress from '../../helpers/longPress'
+import { useLongPress } from 'use-long-press';
 
 export const Map = ({ style, blocks } : any) => {
   const { grid, setGrid, gameOver, setGameOver }: any = useContext(GameContext)
-  const [onStart, onEnd] = useLongPress(() => flag, 1000);
+  const bindLongPress = useLongPress((e, { context }) => {
+    flag(context)
+  });
 
   const getPositions = () => {
     return grid ? Object.values(grid) : []
@@ -62,13 +64,12 @@ export const Map = ({ style, blocks } : any) => {
             flagged={position.flag}
             block={position.block}
             gameOver={gameOver}
+            {...bindLongPress(position)}
             s={{
               left: `${position.x}rem`,
               top: `${position.y}rem`
             }}
             onClick={(e: React.MouseEvent) => onClick(e, position)}
-            onTouchStart={onStart}
-            onTouchEnd={onEnd}
           />
         </>
       )) }
