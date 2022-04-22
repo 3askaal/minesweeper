@@ -1,19 +1,20 @@
-import React, { ReactEventHandler, ReactFragment, useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { SMap, SMapBlock, SMapBomb, SMapBombMarker } from './Map.styled'
 import { GameContext } from '../../context'
 import { useLongPress } from 'use-long-press';
+import { IPosition } from '../../types';
 
-export const Map = ({ style, blocks } : any) => {
-  const { grid, setGrid, gameOver, setGameOver }: any = useContext(GameContext)
+export const Map = ({ style, blocks }: any) => {
+  const { grid, setGrid, gameOver, setGameOver } = useContext(GameContext)
   const bindLongPress = useLongPress((e, { context }) => {
-    flag(context)
+    flag(context as IPosition)
   });
 
   const getPositions = () => {
     return grid ? Object.values(grid) : []
   }
 
-  const reveal = (position: any) => {
+  const reveal = (position: IPosition) => {
     if (position.bomb) {
       setGameOver({ won: false })
     }
@@ -23,20 +24,20 @@ export const Map = ({ style, blocks } : any) => {
     setGrid(newGrid)
   }
 
-  const flag = (position: any) => {
+  const flag = (position: IPosition) => {
     const newGrid = { ...grid }
     const item = newGrid[`${position.x}/${position.y}`]
     newGrid[`${position.x}/${position.y}`].flag = !item.flag
     setGrid(newGrid)
   }
 
-  const onClick = (e: React.MouseEvent, block: any) => {
+  const onClick = (e: React.MouseEvent, block: IPosition) => {
     e.shiftKey ? flag(block) : reveal(block)
   }
 
   useEffect(() => {
     if (grid) {
-      const remainingBlocks = Object.values(grid).filter((position: any) => {
+      const remainingBlocks = Object.values(grid).filter((position: IPosition) => {
         return position.block && !position.bomb
       }).length
 
