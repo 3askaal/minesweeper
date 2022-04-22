@@ -1,23 +1,32 @@
 import React, { useContext, useEffect } from 'react'
 import { Container, Wrapper, Box, Popup, Button, Text } from '3oilerplate'
-import ReactGA from 'react-ga4'
 import { Map } from '../../components'
 import { GameContext } from '../../context'
-import ReactGA4 from 'react-ga4'
-import faker from 'faker'
-import { Timer } from '../../components/Timer/Timer'
 import { useKeyboardBindings } from '../../helpers/keyboard'
-import { useHistory, useLocation } from 'react-router-dom'
+import ReactGA4 from 'react-ga4'
 
 const PlayView = () => {
-  const search = useLocation().search;
   const { onStartGame, blocks, gameOver } = useContext(GameContext)
 
   useKeyboardBindings()
 
   useEffect(() => {
     onStartGame()
+
+    ReactGA4.event({
+      category: "actions",
+      action: "game:start",
+    });
   }, [])
+
+  useEffect(() => {
+    if (gameOver?.won) {
+      ReactGA4.event({
+        category: "actions",
+        action: "game:won",
+      });
+    }
+  }, [gameOver])
 
   return (
     <Wrapper s={{ padding: ['xs', 'xs', 's'] }}>
@@ -33,7 +42,7 @@ const PlayView = () => {
           ]}
         >
           <Text s={{ textAlign: 'center' }}>
-            You stepped on a mine! Click restart to play again!
+            { gameOver.won ? 'You won! Click restart to play again.' : 'You stepped on a mine! Click restart to play again.' }
           </Text>
         </Popup>
       ) }

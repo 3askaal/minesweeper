@@ -2,9 +2,9 @@ import { times, sampleSize } from 'lodash'
 
 export const generateGrid = (blocks: number) => {
   let newGrid: any = {}
-  const amountBricksForUnevenCube = (blocks * blocks) + blocks + blocks + 1
+  const positionAmount = (blocks * blocks) + blocks + blocks + 1
 
-  times(amountBricksForUnevenCube, (i) => {
+  times(positionAmount, (i) => {
     const y = (i - (i % (blocks + 1))) / (blocks + 1)
     const x = i % (blocks + 1)
 
@@ -19,15 +19,15 @@ export const generateGrid = (blocks: number) => {
 export const generateBombs = (grid: any) => {
   let newGrid = { ...grid }
 
-  const freeSpaces = Object.values(grid)
+  const positions = Object.values(grid)
 
-  const bombPositions = sampleSize(freeSpaces, Math.round(freeSpaces.length * .15))
+  const bombPositions = sampleSize(positions, Math.round(positions.length * .15))
 
   bombPositions.forEach(({x, y}: any) => {
     newGrid = { ...newGrid, [`${x}/${y}`]: { ...newGrid[`${x}/${y}`], bomb: true }}
   })
 
-  freeSpaces.forEach((position: any) => {
+  positions.forEach((position: any) => {
     const { x: rootX , y: rootY } = position
 
     const amountBombsSurrounding = Object.values(newGrid)

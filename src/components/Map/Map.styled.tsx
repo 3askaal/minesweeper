@@ -68,10 +68,10 @@ const markerColors = [
   '#019267',
   '#E84545',
   '#27496D',
-  'red',
-  'cyan',
-  'purple',
-  'darkgrey'
+  '#630606',
+  '#069A8E',
+  '#383838',
+  '#6D8299'
 ]
 
 export const SMapBombMarker = s.div(({ theme, amount }: any) => ({

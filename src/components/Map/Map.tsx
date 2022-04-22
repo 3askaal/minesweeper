@@ -1,4 +1,4 @@
-import React, { ReactEventHandler, ReactFragment, useContext, useState } from 'react'
+import React, { ReactEventHandler, ReactFragment, useContext, useEffect, useState } from 'react'
 import { SMap, SMapBlock, SMapBomb, SMapBombMarker } from './Map.styled'
 import { GameContext } from '../../context'
 import { useLongPress } from 'use-long-press';
@@ -15,7 +15,7 @@ export const Map = ({ style, blocks } : any) => {
 
   const reveal = (position: any) => {
     if (position.bomb) {
-      setGameOver(true)
+      setGameOver({ won: false })
     }
 
     const newGrid = { ...grid }
@@ -33,6 +33,18 @@ export const Map = ({ style, blocks } : any) => {
   const onClick = (e: React.MouseEvent, block: any) => {
     e.shiftKey ? flag(block) : reveal(block)
   }
+
+  useEffect(() => {
+    if (grid) {
+      const remainingBlocks = Object.values(grid).filter((position: any) => {
+        return position.block && !position.bomb
+      }).length
+
+      if (!remainingBlocks) {
+        setGameOver({ won: true })
+      }
+    }
+  }, [grid])
 
   return (
     <SMap style={{style}} blocks={blocks + 1}>
@@ -63,7 +75,7 @@ export const Map = ({ style, blocks } : any) => {
             key={`block-${index}`}
             flagged={position.flag}
             block={position.block}
-            gameOver={gameOver}
+            gameOver={!!gameOver}
             {...bindLongPress(position)}
             s={{
               left: `${position.x}rem`,
