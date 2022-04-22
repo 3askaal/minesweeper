@@ -3,7 +3,8 @@ export interface IGrid {
     x: number;
     y: number;
     block: boolean;
-    bomb: boolean;
-    explosion: boolean;
+    bomb?: boolean;
+    marker?: boolean;
+    amount?: number;
   }
 }
