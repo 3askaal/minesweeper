@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext } from 'react'
 import { uniqBy } from 'lodash'
 import { SMap, SMapBlock, SMapBomb, SMapBombMarker } from './Map.styled'
 import { GameContext } from '../../context'
@@ -9,7 +9,7 @@ const isFreePosition = (pos: IPosition, thread?: boolean) => {
   return (!pos.thread || thread) && !pos.bomb
 }
 
-const resolveFreePositions = (grid: IGrid, { x, y }: IPosition, checkedPositions: IPosition[], thread?: boolean): IPosition[] => {
+const getFreeSurroundingPos = (grid: IGrid, { x, y }: IPosition, checkedPositions: IPosition[], thread?: boolean): IPosition[] => {
   let surroundingPositions = [
     { x, y: y - 1 },
     { x, y: y + 1 },
@@ -50,35 +50,31 @@ export const Map = ({ style, blocks }: any) => {
     newGrid[`${position.x}/${position.y}`].block = false
 
     if (isFreePosition(position)) {
-      let freePositions = resolveFreePositions(newGrid, position, [])
-      let uncheckedFreePositions: IPosition[] = freePositions
+      let freePositions = getFreeSurroundingPos(newGrid, position, [])
+      let freePositionsToCheck: IPosition[] = freePositions
 
-      while (uncheckedFreePositions.length) {
-        let collectedUnchecked: IPosition[] = []
+      while (freePositionsToCheck.length) {
+        let nextPositions: IPosition[] = []
 
-        for (let index = 0; index < uncheckedFreePositions.length; index++) {
-          const newFreePositions = resolveFreePositions(newGrid, uncheckedFreePositions[index], freePositions)
-          collectedUnchecked = [...collectedUnchecked, ...newFreePositions]
-          freePositions = [...freePositions, ...uncheckedFreePositions]
+        for (let index = 0; index < freePositionsToCheck.length; index++) {
+          const newFreeSurroundingPositions = getFreeSurroundingPos(newGrid, freePositionsToCheck[index], freePositions)
+          nextPositions = [...nextPositions, ...newFreeSurroundingPositions]
+          freePositions = [...freePositions, ...freePositionsToCheck]
         }
 
-        uncheckedFreePositions = uniqBy(collectedUnchecked, ({x, y}: IPosition) => `${x}/${y}`)
+        freePositionsToCheck = uniqBy(nextPositions, ({x, y}: IPosition) => `${x}/${y}`)
       }
 
       for (let index = 0; index < freePositions.length; index++) {
         const pos = freePositions[index]
         newGrid = { ...newGrid, [`${pos.x}/${pos.y}`]: { ...newGrid[`${pos.x}/${pos.y}`], block: false } }
 
-        const newFreePositions = resolveFreePositions(newGrid, pos, freePositions, true)
+        const newFreeSurroundingPositions = getFreeSurroundingPos(newGrid, pos, freePositions, true)
 
-        for (let index = 0; index < newFreePositions.length; index++) {
-          const pos = newFreePositions[index]
+        for (let index = 0; index < newFreeSurroundingPositions.length; index++) {
+          const pos = newFreeSurroundingPositions[index]
           newGrid = { ...newGrid, [`${pos.x}/${pos.y}`]: { ...newGrid[`${pos.x}/${pos.y}`], block: false } }
         }
-      }
-
-      for (let index = 0; index < freePositions.length; index++) {
-
       }
     }
 
@@ -95,18 +91,6 @@ export const Map = ({ style, blocks }: any) => {
   const onClick = (e: React.MouseEvent, block: IPosition) => {
     e.shiftKey ? flag(block) : reveal(block)
   }
-
-  useEffect(() => {
-    if (grid) {
-      const remainingBlocks = Object.values(grid).filter((position: IPosition) => {
-        return position.block && !position.bomb
-      }).length
-
-      if (!remainingBlocks) {
-        setGameOver({ won: true })
-      }
-    }
-  }, [grid])
 
   return (
     <SMap style={{style}} blocks={blocks + 1}>

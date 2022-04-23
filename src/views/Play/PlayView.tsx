@@ -6,7 +6,7 @@ import { useKeyboardBindings } from '../../helpers/keyboard'
 import ReactGA4 from 'react-ga4'
 
 const PlayView = () => {
-  const { onStartGame, blocks, gameOver } = useContext(GameContext)
+  const { onStartGame, blocks, gameOver, remainingBlocks } = useContext(GameContext)
 
   useKeyboardBindings()
 
@@ -32,6 +32,7 @@ const PlayView = () => {
     <Wrapper s={{ padding: ['xs', 'xs', 's'] }}>
       <Container s={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', }}>
         <Box>
+          <Text s={{ pb: 's' }}>{ remainingBlocks }</Text>
           <Map blocks={blocks} />
         </Box>
       </Container>
