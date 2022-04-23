@@ -31,7 +31,7 @@ export const SMap = s.div(({ theme, blocks, gameOver }: any) => ({
   })
 }))
 
-export const SMapBlock = s.div(({ theme, block, flagged, gameOver }: any) => ({
+export const SMapBlock = s.div(({ theme, block, flagged }: any) => ({
   position: 'absolute',
   width: '1rem',
   height: '1rem',

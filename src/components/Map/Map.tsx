@@ -118,17 +118,19 @@ export const Map = ({ style, blocks }: any) => {
               { position.amount }
             </SMapBombMarker>
           ): null}
-          <SMapBlock
-            key={`block-${index}`}
-            flagged={position.flag}
-            block={position.block}
-            {...bindLongPress(position)}
-            s={{
-              left: `${position.x}rem`,
-              top: `${position.y}rem`
-            }}
-            onClick={(e: React.MouseEvent) => onClick(e, position)}
-          />
+          { (!gameOver || !position.bomb) && (
+            <SMapBlock
+              key={`block-${index}`}
+              flagged={position.flag}
+              block={position.block}
+              {...bindLongPress(position)}
+              s={{
+                left: `${position.x}rem`,
+                top: `${position.y}rem`
+              }}
+              onClick={(e: React.MouseEvent) => onClick(e, position)}
+            />
+          )}
         </>
       )) }
     </SMap>
