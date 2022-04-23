@@ -4,7 +4,7 @@ export interface IPosition {
   y: number;
   block: boolean;
   bomb?: boolean;
-  marker?: boolean;
+  thread?: boolean;
   amount?: number;
   flag?: boolean;
 }

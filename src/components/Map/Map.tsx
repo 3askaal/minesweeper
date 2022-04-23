@@ -5,11 +5,11 @@ import { GameContext } from '../../context'
 import { useLongPress } from 'use-long-press';
 import { IGrid, IPosition } from '../../types';
 
-const isFreePosition = (pos: IPosition, marker?: boolean) => {
-  return (!pos.marker || marker) && !pos.bomb
+const isFreePosition = (pos: IPosition, thread?: boolean) => {
+  return (!pos.thread || thread) && !pos.bomb
 }
 
-const resolveFreePositions = (grid: IGrid, { x, y }: IPosition, checkedPositions: IPosition[], marker?: boolean): IPosition[] => {
+const resolveFreePositions = (grid: IGrid, { x, y }: IPosition, checkedPositions: IPosition[], thread?: boolean): IPosition[] => {
   let surroundingPositions = [
     { x, y: y - 1 },
     { x, y: y + 1 },
@@ -24,7 +24,7 @@ const resolveFreePositions = (grid: IGrid, { x, y }: IPosition, checkedPositions
     .filter((pos) => {
       return pos &&
         pos.block &&
-        isFreePosition(pos, marker) &&
+        isFreePosition(pos, thread) &&
         !checkedPositions.find(({ x, y }) => x === pos.x && y === pos.y)
     })
 
@@ -121,9 +121,9 @@ export const Map = ({ style, blocks }: any) => {
               }}
             />
           ) : null }
-          { position.marker ? (
+          { position.thread ? (
             <SMapBombMarker
-              key={`marker-${index}`}
+              key={`thread-${index}`}
               amount={position.amount}
               s={{
                 left: `${position.x}rem`,

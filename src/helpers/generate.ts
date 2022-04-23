@@ -38,7 +38,7 @@ export const generateBombs = (grid: any) => {
     const item = newGrid[`${rootX}/${rootY}`]
 
     if (amountBombsSurrounding && !item.bomb) {
-      newGrid = { ...newGrid, [`${rootX}/${rootY}`]: { ...newGrid[`${rootX}/${rootY}`], marker: true, amount: amountBombsSurrounding  }}
+      newGrid = { ...newGrid, [`${rootX}/${rootY}`]: { ...newGrid[`${rootX}/${rootY}`], thread: true, amount: amountBombsSurrounding  }}
     }
   })
 

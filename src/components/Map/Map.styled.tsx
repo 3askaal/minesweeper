@@ -63,7 +63,7 @@ export const SMapBlock = s.div(({ theme, block, flagged, gameOver }: any) => ({
   })
 }))
 
-const markerColors = [
+const threadColors = [
   '#07689F',
   '#019267',
   '#E84545',
@@ -81,7 +81,7 @@ export const SMapBombMarker = s.div(({ theme, amount }: any) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  color: markerColors[amount - 1],
+  color: threadColors[amount - 1],
   fontWeight: 'bold',
   fontSize: '.8em'
 }))
