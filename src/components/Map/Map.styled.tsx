@@ -91,9 +91,9 @@ export const SMapBombMarker = s.div(({ theme, amount }: any) => ({
 export const SMapBomb = s.div(() => ({
   position: 'absolute',
   borderRadius: '100%',
-  width: '.7rem',
-  height: '.7rem',
-  margin: '.15rem',
+  width: '.6rem',
+  height: '.6rem',
+  margin: '.2rem',
   backgroundColor: '#222',
   // border: '0.15rem solid #555',
 }))
