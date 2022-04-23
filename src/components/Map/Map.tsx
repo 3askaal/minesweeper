@@ -5,11 +5,11 @@ import { GameContext } from '../../context'
 import { useLongPress } from 'use-long-press';
 import { IGrid, IPosition } from '../../types';
 
-const isFreePosition = (pos: IPosition) => {
-  return !pos.marker && !pos.bomb
+const isFreePosition = (pos: IPosition, marker?: boolean) => {
+  return (!pos.marker || marker) && !pos.bomb
 }
 
-const resolveFreePositions = (grid: IGrid, { x, y }: IPosition, checkedPositions: IPosition[]): IPosition[] => {
+const resolveFreePositions = (grid: IGrid, { x, y }: IPosition, checkedPositions: IPosition[], marker?: boolean): IPosition[] => {
   let surroundingPositions = [
     { x, y: y - 1 },
     { x, y: y + 1 },
@@ -24,7 +24,7 @@ const resolveFreePositions = (grid: IGrid, { x, y }: IPosition, checkedPositions
     .filter((pos) => {
       return pos &&
         pos.block &&
-        isFreePosition(pos) &&
+        isFreePosition(pos, marker) &&
         !checkedPositions.find(({ x, y }) => x === pos.x && y === pos.y)
     })
 
@@ -68,6 +68,17 @@ export const Map = ({ style, blocks }: any) => {
       for (let index = 0; index < freePositions.length; index++) {
         const pos = freePositions[index]
         newGrid = { ...newGrid, [`${pos.x}/${pos.y}`]: { ...newGrid[`${pos.x}/${pos.y}`], block: false } }
+
+        const newFreePositions = resolveFreePositions(newGrid, pos, freePositions, true)
+
+        for (let index = 0; index < newFreePositions.length; index++) {
+          const pos = newFreePositions[index]
+          newGrid = { ...newGrid, [`${pos.x}/${pos.y}`]: { ...newGrid[`${pos.x}/${pos.y}`], block: false } }
+        }
+      }
+
+      for (let index = 0; index < freePositions.length; index++) {
+
       }
     }
 
