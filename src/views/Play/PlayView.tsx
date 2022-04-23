@@ -26,6 +26,13 @@ const PlayView = () => {
         action: "game:won",
       });
     }
+
+    if (gameOver?.won === false) {
+      ReactGA4.event({
+        category: "actions",
+        action: "game:lost",
+      });
+    }
   }, [gameOver])
 
   return (
