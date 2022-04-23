@@ -36,7 +36,7 @@ export const GameProvider = ({ children }: any) => {
 
       setRemainingBlocks(newRemainingBlocks)
 
-      if (!remainingBlocks) {
+      if (!newRemainingBlocks) {
         setGameOver({ won: true })
       }
     }
