@@ -32,7 +32,7 @@ const PlayView = () => {
     <Wrapper s={{ padding: ['xs', 'xs', 's'] }}>
       <Container s={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', }}>
         <Box>
-          <Text s={{ pb: 's' }}>{ remainingBlocks }</Text>
+          <Text s={{ pb: 's', fontSize: '.9em', textAlign: 'center' }}>Remaining: { remainingBlocks }</Text>
           <Map blocks={blocks} />
         </Box>
       </Container>
