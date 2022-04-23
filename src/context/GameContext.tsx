@@ -20,7 +20,7 @@ export const GameProvider = ({ children }: any) => {
   const [grid, setGrid] = useState(null)
   const [gameOver, setGameOver] = useState(null)
 
-  const onStartGame = (args?: any) => {
+  const onStartGame = () => {
     setGrid(generateGrid(blocks))
     setGameOver(null)
   }
