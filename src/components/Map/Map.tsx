@@ -44,6 +44,7 @@ export const Map = ({ style, blocks }: any) => {
   const reveal = (position: IPosition) => {
     if (position.bomb) {
       setGameOver({ won: false })
+      return
     }
 
     let newGrid = { ...grid }
@@ -93,7 +94,7 @@ export const Map = ({ style, blocks }: any) => {
   }
 
   return (
-    <SMap style={{style}} blocks={blocks + 1}>
+    <SMap style={{style}} blocks={blocks + 1} gameOver={!!gameOver}>
       { getPositions().map((position: any, index: number) => (
         <>
           { position.bomb ? (
@@ -121,7 +122,6 @@ export const Map = ({ style, blocks }: any) => {
             key={`block-${index}`}
             flagged={position.flag}
             block={position.block}
-            gameOver={!!gameOver}
             {...bindLongPress(position)}
             s={{
               left: `${position.x}rem`,

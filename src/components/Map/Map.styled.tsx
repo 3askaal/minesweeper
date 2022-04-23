@@ -1,7 +1,7 @@
 import { s, darken } from '3oilerplate'
 import chroma from 'chroma-js'
 
-export const SMap = s.div(({ theme, blocks }: any) => ({
+export const SMap = s.div(({ theme, blocks, gameOver }: any) => ({
   display: 'flex',
   position: 'relative',
   height: `calc(${blocks}rem + .5rem)`,
@@ -15,7 +15,20 @@ export const SMap = s.div(({ theme, blocks }: any) => ({
   // Dark
   borderLeftColor: chroma('#fff').darken(1.5).hex(),
   borderBottomColor: chroma('#fff').darken(1.5).hex(),
-  userSelect: 'none'
+  userSelect: 'none',
+
+  ...(gameOver && {
+    [SMapBlock]: {
+      // Light
+      borderTopColor: chroma('#FD0054').brighten(1).hex(),
+      borderRightColor: chroma('#FD0054').brighten(1).hex(),
+      // Middle
+      backgroundColor: chroma('#FD0054').hex(),
+      // Dark
+      borderLeftColor: chroma('#FD0054').darken(1).hex(),
+      borderBottomColor: chroma('#FD0054').darken(1).hex(),
+    }
+  })
 }))
 
 export const SMapBlock = s.div(({ theme, block, flagged, gameOver }: any) => ({
@@ -50,17 +63,6 @@ export const SMapBlock = s.div(({ theme, block, flagged, gameOver }: any) => ({
     borderLeftColor: chroma('#C9485B').darken(1).hex(),
     borderBottomColor: chroma('#C9485B').darken(1).hex(),
   }),
-
-  ...(gameOver && {
-    // Light
-    borderTopColor: chroma('#FD0054').brighten(1).hex(),
-    borderRightColor: chroma('#FD0054').brighten(1).hex(),
-    // Middle
-    backgroundColor: chroma('#FD0054').hex(),
-    // Dark
-    borderLeftColor: chroma('#FD0054').darken(1).hex(),
-    borderBottomColor: chroma('#FD0054').darken(1).hex(),
-  })
 }))
 
 const threadColors = [
