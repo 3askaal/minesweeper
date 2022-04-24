@@ -17,6 +17,16 @@ const getFreeSurroundingPos = (grid: IGrid, { x, y }: IPosition, checkedPosition
     { x: x + 1, y },
   ]
 
+  if (thread) {
+    surroundingPositions = [
+      ...surroundingPositions,
+      { x: x - 1, y: y - 1 },
+      { x: x + 1, y: y - 1 },
+      { x: x - 1, y: y + 1 },
+      { x: x + 1, y: y + 1 },
+    ]
+  }
+
   surroundingPositions = surroundingPositions
     .map((pos) => {
       return grid[`${pos.x}/${pos.y}`]
@@ -52,7 +62,7 @@ export const Map = ({ style, blocks }: any) => {
 
     if (isFreePosition(position)) {
       let freePositions = getFreeSurroundingPos(newGrid, position, [])
-      let freePositionsToCheck: IPosition[] = freePositions
+      let freePositionsToCheck: IPosition[] = [ position, ...freePositions ]
 
       while (freePositionsToCheck.length) {
         let nextPositions: IPosition[] = []
