@@ -11,20 +11,19 @@ interface GameContextType {
 }
 
 export const GameContext = createContext<GameContextType>({
-  settings: {},
+  settings: { blocks: 16, bombs: 32 },
   grid: null,
   remainingBlocks: null
 })
 
 export const GameProvider = ({ children }: any) => {
-  const [settings, setSettings] = useState({ type: 'local' })
-  const [blocks] = useState(16)
+  const [settings, setSettings] = useState({ blocks: 16, bombs: 32 })
   const [grid, setGrid] = useState<IGrid | null>(null)
   const [gameOver, setGameOver] = useState<{ won: boolean } | null>(null)
   const [remainingBlocks, setRemainingBlocks] = useState<number | null>(null)
 
   const onStartGame = () => {
-    setGrid(generateGrid(blocks))
+    setGrid(generateGrid(settings))
     setGameOver(null)
   }
 
@@ -48,7 +47,6 @@ export const GameProvider = ({ children }: any) => {
         onStartGame,
         settings,
         setSettings,
-        blocks,
         grid,
         setGrid,
         gameOver,

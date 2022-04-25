@@ -40,8 +40,8 @@ const getEmptySurroundingPositions = (grid: IGrid, { x, y }: IPosition, thread?:
   return surroundingPositions as IPosition[]
 }
 
-export const Map = ({ style, blocks }: any) => {
-  const { grid, setGrid, gameOver, setGameOver } = useContext(GameContext)
+export const Map = () => {
+  const { grid, setGrid, gameOver, setGameOver, settings } = useContext(GameContext)
   const bindLongPress = useLongPress((e, { context }) => {
     flag(context as IPosition)
   });
@@ -70,7 +70,7 @@ export const Map = ({ style, blocks }: any) => {
           const emptySurroundingPositions = getEmptySurroundingPositions(newGrid, uncheckedEmptyPosition)
             .filter((pos) => !checkedEmptyPositions.find(({ x, y }) => x === pos.x && y === pos.y))
 
-          newUncheckedEmptyPositions = uniqBy([...newUncheckedEmptyPositions, ...emptySurroundingPositions], ({x, y}: IPosition) => `${x}/${y}`)
+          newUncheckedEmptyPositions = [...newUncheckedEmptyPositions, ...emptySurroundingPositions]
         })
 
         checkedEmptyPositions = [...checkedEmptyPositions, ...uncheckedEmptyPositions]
@@ -105,7 +105,7 @@ export const Map = ({ style, blocks }: any) => {
   }
 
   return (
-    <SMap style={{style}} blocks={blocks + 1} gameOver={!!gameOver}>
+    <SMap blocks={settings.blocks + 1} gameOver={!!gameOver}>
       { getPositions().map((position: any, index: number) => (
         <>
           { position.bomb ? (

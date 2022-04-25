@@ -1,6 +1,7 @@
 import { times, sampleSize } from 'lodash'
+import { ISettings } from '../types'
 
-export const generateGrid = (blocks: number) => {
+export const generateGrid = ({ blocks, bombs }: ISettings) => {
   let newGrid: any = {}
   const positionAmount = (blocks * blocks) + blocks + blocks + 1
 
@@ -11,17 +12,17 @@ export const generateGrid = (blocks: number) => {
     newGrid[`${x}/${y}`] = { x, y, block: true }
   })
 
-  newGrid = generateBombs(newGrid)
+  newGrid = generateBombs(newGrid, bombs)
 
   return newGrid
 }
 
-export const generateBombs = (grid: any) => {
+export const generateBombs = (grid: any, bombs: number) => {
   let newGrid = { ...grid }
 
   const positions = Object.values(grid)
 
-  const bombPositions = sampleSize(positions, Math.round(positions.length * .1))
+  const bombPositions = sampleSize(positions, bombs)
 
   bombPositions.forEach(({x, y}: any) => {
     newGrid = { ...newGrid, [`${x}/${y}`]: { ...newGrid[`${x}/${y}`], bomb: true }}

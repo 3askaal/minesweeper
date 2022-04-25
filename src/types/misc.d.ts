@@ -1,1 +1,4 @@
-export interface ISettings {}
+export interface ISettings {
+  blocks: number;
+  bombs: number;
+}
