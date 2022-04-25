@@ -5,11 +5,11 @@ import { GameContext } from '../../context'
 import { useLongPress } from 'use-long-press';
 import { IGrid, IPosition } from '../../types';
 
-const isFreePosition = (pos: IPosition, thread?: boolean) => {
-  return (!pos.thread || thread) && !pos.bomb
+const isEmptyPosition = (pos: IPosition, countThreads?: boolean) => {
+  return (countThreads || !pos.thread) && !pos.bomb
 }
 
-const getFreeSurroundingPos = (grid: IGrid, { x, y }: IPosition, checkedPositions: IPosition[], thread?: boolean): IPosition[] => {
+const getEmptySurroundingPositions = (grid: IGrid, { x, y }: IPosition, thread?: boolean): IPosition[] => {
   let surroundingPositions = [
     { x, y: y - 1 },
     { x, y: y + 1 },
@@ -34,8 +34,7 @@ const getFreeSurroundingPos = (grid: IGrid, { x, y }: IPosition, checkedPosition
     .filter((pos) => {
       return pos &&
         pos.block &&
-        isFreePosition(pos, thread) &&
-        !checkedPositions.find(({ x, y }) => x === pos.x && y === pos.y)
+        isEmptyPosition(pos, thread)
     })
 
   return surroundingPositions as IPosition[]
@@ -60,33 +59,35 @@ export const Map = ({ style, blocks }: any) => {
     let newGrid = { ...grid }
     newGrid[`${position.x}/${position.y}`].block = false
 
-    if (isFreePosition(position)) {
-      let freePositions = getFreeSurroundingPos(newGrid, position, [])
-      let freePositionsToCheck: IPosition[] = [ position, ...freePositions ]
+    if (isEmptyPosition(position)) {
+      let checkedEmptyPositions: IPosition[] = []
+      let uncheckedEmptyPositions: IPosition[] = [ position ]
 
-      while (freePositionsToCheck.length) {
-        let nextPositions: IPosition[] = []
+      while (uncheckedEmptyPositions.length) {
+        let newUncheckedEmptyPositions: IPosition[] = []
 
-        for (let index = 0; index < freePositionsToCheck.length; index++) {
-          const newFreeSurroundingPositions = getFreeSurroundingPos(newGrid, freePositionsToCheck[index], freePositions)
-          nextPositions = [...nextPositions, ...newFreeSurroundingPositions]
-          freePositions = [...freePositions, ...freePositionsToCheck]
-        }
+        uncheckedEmptyPositions.forEach((uncheckedEmptyPosition) => {
+          const emptySurroundingPositions = getEmptySurroundingPositions(newGrid, uncheckedEmptyPosition)
+            .filter((pos) => !checkedEmptyPositions.find(({ x, y }) => x === pos.x && y === pos.y))
 
-        freePositionsToCheck = uniqBy(nextPositions, ({x, y}: IPosition) => `${x}/${y}`)
+          newUncheckedEmptyPositions = uniqBy([...newUncheckedEmptyPositions, ...emptySurroundingPositions], ({x, y}: IPosition) => `${x}/${y}`)
+        })
+
+        checkedEmptyPositions = [...checkedEmptyPositions, ...uncheckedEmptyPositions]
+        uncheckedEmptyPositions = uniqBy(newUncheckedEmptyPositions, ({x, y}: IPosition) => `${x}/${y}`)
       }
 
-      for (let index = 0; index < freePositions.length; index++) {
-        const pos = freePositions[index]
-        newGrid = { ...newGrid, [`${pos.x}/${pos.y}`]: { ...newGrid[`${pos.x}/${pos.y}`], block: false } }
+      checkedEmptyPositions.forEach((checkedEmptyPosition) => {
+        const key = `${checkedEmptyPosition.x}/${checkedEmptyPosition.y}`
+        newGrid = { ...newGrid, [key]: { ...checkedEmptyPosition, block: false } }
 
-        const newFreeSurroundingPositions = getFreeSurroundingPos(newGrid, pos, freePositions, true)
+        const newFreeSurroundingPositions = getEmptySurroundingPositions(newGrid, checkedEmptyPosition, true)
 
-        for (let index = 0; index < newFreeSurroundingPositions.length; index++) {
-          const pos = newFreeSurroundingPositions[index]
-          newGrid = { ...newGrid, [`${pos.x}/${pos.y}`]: { ...newGrid[`${pos.x}/${pos.y}`], block: false } }
-        }
-      }
+        newFreeSurroundingPositions.forEach((newFreeSurroundingPosition) => {
+          const key = `${newFreeSurroundingPosition.x}/${newFreeSurroundingPosition.y}`
+          newGrid = { ...newGrid, [key]: { ...newFreeSurroundingPosition, block: false } }
+        })
+      })
     }
 
     setGrid(newGrid)
