@@ -42,13 +42,13 @@ export const SMapBlock = s.div(({ theme, blocks, block, flagged }: any) => ({
   cursor: 'pointer',
 
   // Light
-  borderTopColor: chroma('#fff').darken(1.5).hex(),
-  borderRightColor: chroma('#fff').darken(1.5).hex(),
+  borderTopColor: chroma('#AAAAAA').darken(0.25).hex(),
+  borderRightColor: chroma('#AAAAAA').darken(0.5).hex(),
   // Middle
-  backgroundColor: chroma('#fff').darken(2.5).hex(),
+  backgroundColor: chroma('#AAAAAA').darken(1.5).hex(),
   // Dark
-  borderLeftColor: chroma('#fff').darken(3.5).hex(),
-  borderBottomColor: chroma('#fff').darken(3.5).hex(),
+  borderLeftColor: chroma('#AAAAAA').darken(2.5).hex(),
+  borderBottomColor: chroma('#AAAAAA').darken(2.75).hex(),
 
   ...(!block && {
     opacity: 0,

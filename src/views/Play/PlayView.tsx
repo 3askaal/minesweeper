@@ -38,7 +38,7 @@ const PlayView = () => {
   return (
     <Wrapper>
       <Container s={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
-        <Text s={{ pb: 's', textAlign: 'center' }}>Remaining: { remainingBlocks }</Text>
+        <Text s={{ pb: 'm', textAlign: 'center' }}>Remaining: { remainingBlocks }</Text>
         <Map />
       </Container>
       { gameOver && (
