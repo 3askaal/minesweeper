@@ -2,8 +2,7 @@ import { colors } from './colors'
 import { fonts } from './fonts'
 
 export const localTheme = {
-  rootFontSizes: ['16px', '18px', '20px', '22px', '24px'],
-  breakpoints: ['320px', '360px', '400px', '440px'],
+  rootFontSizes: ['14px', '16px'],
   colors,
   fonts,
   components: {

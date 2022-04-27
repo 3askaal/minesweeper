@@ -1,5 +1,6 @@
-import React, { useContext } from 'react'
-import { uniqBy } from 'lodash'
+import React, { useContext, useEffect, useRef, useState } from 'react'
+import { min, uniqBy } from 'lodash'
+import { Box } from '3oilerplate'
 import { SMap, SMapBlock, SMapBomb, SMapBombMarker } from './Map.styled'
 import { GameContext } from '../../context'
 import { useLongPress } from 'use-long-press';
@@ -45,6 +46,7 @@ export const Map = () => {
   const bindLongPress = useLongPress((e, { context }) => {
     flag(context as IPosition)
   });
+
 
   const getPositions = () => {
     return grid ? Object.values(grid) : []
@@ -104,27 +106,32 @@ export const Map = () => {
     e.shiftKey ? flag(block) : reveal(block)
   }
 
+  const blockSize = 100 / (settings.blocks + 1)
+
   return (
-    <SMap blocks={settings.blocks + 1} gameOver={!!gameOver}>
+    <SMap gameOver={!!gameOver}>
       { getPositions().map((position: any, index: number) => (
-        <>
+        <Box
+          s={{
+            position: 'absolute',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: `${blockSize}%`,
+            height: `${blockSize}%`,
+            left: `${blockSize * position.x}%`,
+            top: `${blockSize * position.y}%`
+          }}
+        >
           { position.bomb ? (
             <SMapBomb
               key={`bomb-${index}`}
-              s={{
-                left: `${position.x}rem`,
-                top: `${position.y}rem`
-              }}
             />
           ) : null }
           { position.thread ? (
             <SMapBombMarker
               key={`thread-${index}`}
               amount={position.amount}
-              s={{
-                left: `${position.x}rem`,
-                top: `${position.y}rem`
-              }}
             >
               { position.amount }
             </SMapBombMarker>
@@ -135,14 +142,10 @@ export const Map = () => {
               flagged={position.flag}
               block={position.block}
               {...bindLongPress(position)}
-              s={{
-                left: `${position.x}rem`,
-                top: `${position.y}rem`
-              }}
               onClick={(e: React.MouseEvent) => onClick(e, position)}
             />
           )}
-        </>
+        </Box>
       )) }
     </SMap>
   )

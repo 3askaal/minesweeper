@@ -1,12 +1,14 @@
-import { s, darken } from '3oilerplate'
+import { s } from '3oilerplate'
 import chroma from 'chroma-js'
 
-export const SMap = s.div(({ theme, blocks, gameOver }: any) => ({
+export const SMap = s.div(({ theme, width, height, gameOver }: any) => ({
   display: 'flex',
   position: 'relative',
-  height: `calc(${blocks}rem + .5rem)`,
-  width: `calc(${blocks}rem + .5rem)`,
+  width: '100%',
+  maxWidth: '500px',
+  aspectRatio: '1 / 1',
   border: '.25rem solid',
+
   // Light
   borderRightColor: chroma('#fff').darken(0.5).hex(),
   borderTopColor: chroma('#fff').darken(0.5).hex(),
@@ -31,11 +33,12 @@ export const SMap = s.div(({ theme, blocks, gameOver }: any) => ({
   })
 }))
 
-export const SMapBlock = s.div(({ theme, block, flagged }: any) => ({
+export const SMapBlock = s.div(({ theme, blocks, block, flagged }: any) => ({
   position: 'absolute',
-  width: '1rem',
-  height: '1rem',
-  border: '0.15rem solid',
+  width: '100%',
+  height: '100%',
+  borderStyle: 'solid',
+  borderWidth: ['0.8vw', '0.8vw', '4px'],
   cursor: 'pointer',
 
   // Light
@@ -49,7 +52,6 @@ export const SMapBlock = s.div(({ theme, block, flagged }: any) => ({
 
   ...(!block && {
     opacity: 0,
-    // backgroundColor: 'transparent',
     pointerEvents: 'none',
   }),
 
@@ -76,24 +78,21 @@ const threadColors = [
   '#6D8299'
 ]
 
-export const SMapBombMarker = s.div(({ theme, amount }: any) => ({
+export const SMapBombMarker = s.div(({ theme, blocks, amount }: any) => ({
   position: 'absolute',
-  width: '1rem',
-  height: '1rem',
+  width: '100%',
+  height: '100%',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
   color: threadColors[amount - 1],
   fontWeight: 'bold',
-  fontSize: '.8em'
 }))
 
-export const SMapBomb = s.div(() => ({
+export const SMapBomb = s.div(({ blocks }: any) => ({
   position: 'absolute',
   borderRadius: '100%',
-  width: '.6rem',
-  height: '.6rem',
-  margin: '.2rem',
+  width: '60%',
+  height: '60%',
   backgroundColor: '#222',
-  // border: '0.15rem solid #555',
 }))

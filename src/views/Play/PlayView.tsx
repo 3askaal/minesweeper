@@ -1,12 +1,12 @@
 import React, { useContext, useEffect } from 'react'
-import { Container, Wrapper, Box, Popup, Button, Text } from '3oilerplate'
+import { Container, Wrapper, Popup, Button, Text } from '3oilerplate'
 import { Map } from '../../components'
 import { GameContext } from '../../context'
 import { useKeyboardBindings } from '../../helpers/keyboard'
 import ReactGA4 from 'react-ga4'
 
 const PlayView = () => {
-  const { onStartGame, blocks, gameOver, remainingBlocks } = useContext(GameContext)
+  const { onStartGame, gameOver, remainingBlocks } = useContext(GameContext)
 
   useKeyboardBindings()
 
@@ -36,12 +36,10 @@ const PlayView = () => {
   }, [gameOver])
 
   return (
-    <Wrapper s={{ padding: ['xs', 'xs', 's'] }}>
-      <Container s={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', }}>
-        <Box>
-          <Text s={{ pb: 's', fontSize: '.9em', textAlign: 'center' }}>Remaining: { remainingBlocks }</Text>
-          <Map />
-        </Box>
+    <Wrapper>
+      <Container s={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+        <Text s={{ pb: 's', textAlign: 'center' }}>Remaining: { remainingBlocks }</Text>
+        <Map />
       </Container>
       { gameOver && (
         <Popup
