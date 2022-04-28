@@ -42,7 +42,7 @@ const getEmptySurroundingPositions = (grid: IGrid, { x, y }: IPosition, thread?:
 }
 
 export const Map = () => {
-  const { grid, setGrid, gameOver, setGameOver, settings, currentTime, setCurrentTime } = useContext(GameContext)
+  const { grid, setGrid, gameActive, setGameActive, gameOver, setGameOver, settings, currentTime, setCurrentTime } = useContext(GameContext)
   const bindLongPress = useLongPress((e, { context }) => {
     flag(context as IPosition)
   });
@@ -105,8 +105,8 @@ export const Map = () => {
   const onClick = (e: React.MouseEvent, block: IPosition) => {
     e.shiftKey ? flag(block) : reveal(block)
 
-    if (!currentTime) {
-      setCurrentTime(0)
+    if (!gameActive) {
+      setGameActive(true)
     }
   }
 

@@ -15,20 +15,22 @@ export const GameContext = createContext<GameContextType>({
   settings: { blocks: 16, bombs: 32 },
   grid: null,
   remainingBlocks: null,
-  currentTime: null
+  currentTime: 0
 })
 
 export const GameProvider = ({ children }: any) => {
   const [settings, setSettings] = useState({ blocks: 16, bombs: 32 })
   const [grid, setGrid] = useState<IGrid | null>(null)
+  const [gameActive, setGameActive] = useState(false)
   const [gameOver, setGameOver] = useState<{ won: boolean } | null>(null)
   const [remainingBlocks, setRemainingBlocks] = useState<number | null>(null)
-  const [currentTime, setCurrentTime] = useState<number | null>(null)
+  const [currentTime, setCurrentTime] = useState<number>(0)
 
   const onStartGame = () => {
     setGrid(generateGrid(settings))
     setGameOver(null)
-    setCurrentTime(null)
+    setGameActive(false)
+    setCurrentTime(0)
   }
 
   useEffect(() => {
@@ -46,10 +48,8 @@ export const GameProvider = ({ children }: any) => {
   }, [grid])
 
   useInterval(() => {
-    if (currentTime !== null) {
-      setCurrentTime(currentTime + 1000)
-    }
-  }, currentTime !== null ? 1000 : null)
+    setCurrentTime(currentTime + 1000)
+  }, (gameActive && !gameOver) ? 1000 : null)
 
   return (
     <GameContext.Provider
@@ -64,7 +64,8 @@ export const GameProvider = ({ children }: any) => {
         remainingBlocks,
         setRemainingBlocks,
         currentTime,
-        setCurrentTime
+        setCurrentTime,
+        setGameActive
       }}
     >
       {children}
