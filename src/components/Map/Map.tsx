@@ -103,7 +103,7 @@ export const Map = () => {
   }
 
   const onClick = (e: React.MouseEvent, block: IPosition) => {
-    e.shiftKey ? flag(block) : reveal(block)
+    e.shiftKey ? flag(block) : block.flag ? flag(block) : reveal(block)
 
     if (!gameActive) {
       setGameActive(true)
