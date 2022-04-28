@@ -106,21 +106,22 @@ export const Map = () => {
     e.shiftKey ? flag(block) : reveal(block)
   }
 
-  const blockSize = 100 / (settings.blocks + 1)
+  const blockSize = 100 / settings.blocks
 
   return (
     <SMap gameOver={!!gameOver}>
       { getPositions().map((position: any, index: number) => (
         <Box
           s={{
-            position: 'absolute',
+            position: 'relative',
             display: 'flex',
+            flexWrap: 'wrap',
             alignItems: 'center',
             justifyContent: 'center',
             width: `${blockSize}%`,
             height: `${blockSize}%`,
-            left: `${blockSize * position.x}%`,
-            top: `${blockSize * position.y}%`
+            // left: `${blockSize * position.x}%`,
+            // top: `${blockSize * position.y}%`
           }}
         >
           { position.bomb ? (

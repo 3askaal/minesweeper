@@ -47,7 +47,7 @@ const PlayView = () => {
             <Button onClick={() => onStartGame({}, false)}>Restart</Button>
           ]}
         >
-          <Text s={{ textAlign: 'center' }}>
+          <Text s={{ width: '100%', textAlign: 'center' }}>
             { gameOver.won ? 'You won! Click restart to play again.' : 'You stepped on a mine! Click restart to play again.' }
           </Text>
         </Popup>

@@ -3,11 +3,11 @@ import { ISettings } from '../types'
 
 export const generateGrid = ({ blocks, bombs }: ISettings) => {
   let newGrid: any = {}
-  const positionAmount = (blocks * blocks) + blocks + blocks + 1
+  const positionAmount = (blocks * blocks)
 
   times(positionAmount, (i) => {
-    const y = (i - (i % (blocks + 1))) / (blocks + 1)
-    const x = i % (blocks + 1)
+    const y = (i - (i % blocks)) / blocks
+    const x = i % (blocks)
 
     newGrid[`${x}/${y}`] = { x, y, block: true }
   })

@@ -3,11 +3,13 @@ import chroma from 'chroma-js'
 
 export const SMap = s.div(({ theme, width, height, gameOver }: any) => ({
   display: 'flex',
+  flexWrap: 'wrap',
   position: 'relative',
   width: '100%',
   maxWidth: '500px',
   aspectRatio: '1 / 1',
   border: '.25rem solid',
+  userSelect: 'none',
 
   // Light
   borderRightColor: chroma('#fff').darken(0.5).hex(),
@@ -17,7 +19,6 @@ export const SMap = s.div(({ theme, width, height, gameOver }: any) => ({
   // Dark
   borderLeftColor: chroma('#fff').darken(1.5).hex(),
   borderBottomColor: chroma('#fff').darken(1.5).hex(),
-  userSelect: 'none',
 
   ...(gameOver && {
     [SMapBlock]: {
