@@ -1,12 +1,13 @@
 import React, { useContext, useEffect } from 'react'
-import { Container, Wrapper, Popup, Button, Text } from '3oilerplate'
-import { Map } from '../../components'
+import { Container, Wrapper, Popup, Button, Text, Spacer } from '3oilerplate'
+import { Smile as SmileIcon, Frown as FrownIcon } from 'react-feather'
+import { Map, Timer } from '../../components'
 import { GameContext } from '../../context'
 import { useKeyboardBindings } from '../../helpers/keyboard'
 import ReactGA4 from 'react-ga4'
 
 const PlayView = () => {
-  const { onStartGame, gameOver, remainingBlocks } = useContext(GameContext)
+  const { onStartGame, gameOver, remainingBlocks, setTime } = useContext(GameContext)
 
   useKeyboardBindings()
 
@@ -38,13 +39,19 @@ const PlayView = () => {
   return (
     <Wrapper>
       <Container s={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
-        <Text s={{ pb: 'm', textAlign: 'center' }}>Remaining: { remainingBlocks }</Text>
+        <Spacer size="l" s={{ pb: 'm', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+          <Timer />
+          <Button onClick={onStartGame} isOutline>
+            { gameOver ? <FrownIcon size={18} /> : <SmileIcon size={18} /> }
+          </Button>
+          <Text s={{ textAlign: 'center' }}>{ remainingBlocks }</Text>
+        </Spacer>
         <Map />
       </Container>
       { gameOver && (
         <Popup
           actions={[
-            <Button onClick={() => onStartGame({}, false)}>Restart</Button>
+            <Button onClick={onStartGame}>Restart</Button>
           ]}
         >
           <Text s={{ width: '100%', textAlign: 'center' }}>
