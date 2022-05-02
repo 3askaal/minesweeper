@@ -5,8 +5,6 @@ export const generateGrid = ({ mode }: ISettings) => {
   let newGrid: any = {}
   const positionAmount = (mode.width * mode.height)
 
-  console.log(mode.width)
-
   times(positionAmount, (i) => {
     const y = (i - (i % mode.width)) / mode.height
     const x = i % (mode.width)

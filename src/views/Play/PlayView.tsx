@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react'
-import { Container, Wrapper, Button, Text, Spacer } from '3oilerplate'
+import { Container, Wrapper, Button, Text, Spacer, Popup } from '3oilerplate'
 import { Smile as SmileIcon, Frown as FrownIcon } from 'react-feather'
 import { Map, Timer } from '../../components'
 import { GameContext } from '../../context'
@@ -37,7 +37,8 @@ const PlayView = () => {
   }, [gameOver])
 
   return (
-    <Wrapper s={{ alignItems: 'flex-end', flexDirection: 'column' }}>
+    <Wrapper>
+      {/* s={{ alignItems: 'flex-end', flexDirection: 'column' }} */}
       {/* <Select
         options={Object.keys(GAME_MODES).map((key: string) => ({ label: capitalize(key), value: key }))}
         onChange={(key: string) => setSettings({ ...settings, mode: GAME_MODES[key], key })}
@@ -52,6 +53,17 @@ const PlayView = () => {
         </Spacer>
         <Map />
       </Container>
+      { gameOver?.won && (
+        <Popup
+          actions={[
+            <Button onClick={onStartGame}>Restart</Button>
+          ]}
+        >
+          <Text s={{ width: '100%', textAlign: 'center' }}>
+            You won! Click restart to play again.
+          </Text>
+        </Popup>
+      ) }
     </Wrapper>
   )
 }
