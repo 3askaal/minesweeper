@@ -1,45 +1,47 @@
 import { times, sampleSize } from 'lodash'
 import { ISettings } from '../types'
 
-export const generateGrid = ({ blocks, bombs }: ISettings) => {
+export const generateGrid = ({ mode }: ISettings) => {
   let newGrid: any = {}
-  const positionAmount = (blocks * blocks)
+  const positionAmount = (mode.width * mode.height)
+
+  console.log(mode.width)
 
   times(positionAmount, (i) => {
-    const y = (i - (i % blocks)) / blocks
-    const x = i % (blocks)
+    const y = (i - (i % mode.width)) / mode.height
+    const x = i % (mode.width)
 
     newGrid[`${x}/${y}`] = { x, y, block: true }
   })
 
-  newGrid = generateBombs(newGrid, bombs)
+  newGrid = generateMines(newGrid, mode.mines)
 
   return newGrid
 }
 
-export const generateBombs = (grid: any, bombs: number) => {
+export const generateMines = (grid: any, mines: number) => {
   let newGrid = { ...grid }
 
   const positions = Object.values(grid)
 
-  const bombPositions = sampleSize(positions, bombs)
+  const minePositions = sampleSize(positions, mines)
 
-  bombPositions.forEach(({x, y}: any) => {
-    newGrid = { ...newGrid, [`${x}/${y}`]: { ...newGrid[`${x}/${y}`], bomb: true }}
+  minePositions.forEach(({x, y}: any) => {
+    newGrid = { ...newGrid, [`${x}/${y}`]: { ...newGrid[`${x}/${y}`], mine: true }}
   })
 
   positions.forEach((position: any) => {
     const { x: rootX , y: rootY } = position
 
-    const amountBombsSurrounding = Object.values(newGrid)
+    const amountMinesSurrounding = Object.values(newGrid)
       .map(({ x, y, ...rest }: any) => ({ ...rest, x: Math.abs(rootX - x), y: Math.abs(rootY - y)}))
-      .filter(({ bomb, x, y }) => bomb && x < 2 && y < 2)
+      .filter(({ mine, x, y }) => mine && x < 2 && y < 2)
       .length
 
     const item = newGrid[`${rootX}/${rootY}`]
 
-    if (amountBombsSurrounding && !item.bomb) {
-      newGrid = { ...newGrid, [`${rootX}/${rootY}`]: { ...newGrid[`${rootX}/${rootY}`], thread: true, amount: amountBombsSurrounding  }}
+    if (amountMinesSurrounding && !item.mine) {
+      newGrid = { ...newGrid, [`${rootX}/${rootY}`]: { ...newGrid[`${rootX}/${rootY}`], thread: true, amount: amountMinesSurrounding  }}
     }
   })
 

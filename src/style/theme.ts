@@ -9,6 +9,7 @@ export const localTheme = {
     Input: {
       default: {
         padding: 'xs',
+        borderWidth: '1px'
       },
       variants: {
         isBlock: {

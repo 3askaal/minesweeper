@@ -1,13 +1,13 @@
 import { s } from '3oilerplate'
 import chroma from 'chroma-js'
 
-export const SMap = s.div(({ theme, width, height, gameOver }: any) => ({
+export const SMap = s.div(({ theme, width, height, mode, gameOver }: any) => ({
   display: 'flex',
   flexWrap: 'wrap',
   position: 'relative',
   width: '100%',
   maxWidth: '500px',
-  aspectRatio: '1 / 1',
+  aspectRatio: `${(mode.width / mode.height) || 1} / 1`,
   border: '.25rem solid',
   userSelect: 'none',
 
@@ -21,7 +21,10 @@ export const SMap = s.div(({ theme, width, height, gameOver }: any) => ({
   borderBottomColor: chroma('#fff').darken(1.5).hex(),
 
   ...(gameOver && {
+    cursor: 'not-allowed',
+
     [SMapBlock]: {
+      pointerEvents: 'none',
       // Light
       borderTopColor: chroma('#FD0054').brighten(1).hex(),
       borderRightColor: chroma('#FD0054').brighten(1).hex(),
@@ -34,7 +37,7 @@ export const SMap = s.div(({ theme, width, height, gameOver }: any) => ({
   })
 }))
 
-export const SMapBlock = s.div(({ theme, blocks, block, flagged }: any) => ({
+export const SMapBlock = s.div(({ theme, block, flagged }: any) => ({
   position: 'absolute',
   width: '100%',
   height: '100%',
@@ -79,7 +82,7 @@ const threadColors = [
   '#6D8299'
 ]
 
-export const SMapBombMarker = s.div(({ theme, blocks, amount }: any) => ({
+export const SMapMineThread = s.div(({ amount }: any) => ({
   position: 'absolute',
   width: '100%',
   height: '100%',
@@ -90,7 +93,7 @@ export const SMapBombMarker = s.div(({ theme, blocks, amount }: any) => ({
   fontWeight: 'bold',
 }))
 
-export const SMapBomb = s.div(({ blocks }: any) => ({
+export const SMapMine = s.div(() => ({
   position: 'absolute',
   borderRadius: '100%',
   width: '60%',

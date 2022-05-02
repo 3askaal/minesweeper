@@ -3,7 +3,7 @@ export interface IPosition {
   x: number;
   y: number;
   block: boolean;
-  bomb?: boolean;
+  mine?: boolean;
   thread?: boolean;
   amount?: number;
   flag?: boolean;

@@ -1,13 +1,13 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
-import { min, uniqBy } from 'lodash'
+import React, { useContext } from 'react'
+import { uniqBy } from 'lodash'
 import { Box } from '3oilerplate'
-import { SMap, SMapBlock, SMapBomb, SMapBombMarker } from './Map.styled'
+import { SMap, SMapBlock, SMapMine, SMapMineThread } from './Map.styled'
 import { GameContext } from '../../context'
 import { useLongPress } from 'use-long-press';
 import { IGrid, IPosition } from '../../types';
 
 const isEmptyPosition = (pos: IPosition, countThreads?: boolean) => {
-  return (countThreads || !pos.thread) && !pos.bomb
+  return (countThreads || !pos.thread) && !pos.mine
 }
 
 const getEmptySurroundingPositions = (grid: IGrid, { x, y }: IPosition, thread?: boolean): IPosition[] => {
@@ -42,18 +42,15 @@ const getEmptySurroundingPositions = (grid: IGrid, { x, y }: IPosition, thread?:
 }
 
 export const Map = () => {
-  const { grid, setGrid, gameActive, setGameActive, gameOver, setGameOver, settings, currentTime, setCurrentTime } = useContext(GameContext)
-  const bindLongPress = useLongPress((e, { context }) => {
-    flag(context as IPosition)
-  });
-
+  const { grid, setGrid, gameActive, setGameActive, gameOver, setGameOver, settings } = useContext(GameContext)
+  const bindLongPress = useLongPress((e, { context }) => flag(context as IPosition));
 
   const getPositions = () => {
     return grid ? Object.values(grid) : []
   }
 
   const reveal = (position: IPosition) => {
-    if (position.bomb) {
+    if (position.mine) {
       setGameOver({ won: false })
       return
     }
@@ -110,38 +107,40 @@ export const Map = () => {
     }
   }
 
-  const blockSize = 100 / settings.blocks
+  const blockSizeX = 100 / settings.mode.width
+  const blockSizeY = 100 / settings.mode.height
 
   return (
-    <SMap gameOver={!!gameOver}>
+    <SMap mode={settings.mode} gameOver={!!gameOver}>
       { getPositions().map((position: any, index: number) => (
         <Box
           s={{
-            position: 'relative',
             display: 'flex',
+            position: 'relative',
             flexWrap: 'wrap',
             alignItems: 'center',
             justifyContent: 'center',
-            width: `${blockSize}%`,
-            height: `${blockSize}%`,
-            // left: `${blockSize * position.x}%`,
-            // top: `${blockSize * position.y}%`
+            width: `${blockSizeX}%`,
+            height: `${blockSizeY}%`,
+            // position: 'absolute',
+            // left: `${position.x}rem`,
+            // top: `${position.y}rem`
           }}
         >
-          { position.bomb ? (
-            <SMapBomb
-              key={`bomb-${index}`}
+          { position.mine ? (
+            <SMapMine
+              key={`mine-${index}`}
             />
           ) : null }
           { position.thread ? (
-            <SMapBombMarker
+            <SMapMineThread
               key={`thread-${index}`}
               amount={position.amount}
             >
               { position.amount }
-            </SMapBombMarker>
+            </SMapMineThread>
           ): null}
-          { (!gameOver || !position.bomb) && (
+          { (!gameOver || !position.mine) && (
             <SMapBlock
               key={`block-${index}`}
               flagged={position.flag}
