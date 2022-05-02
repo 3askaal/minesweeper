@@ -47,7 +47,7 @@ const PlayView = () => {
         <Spacer size="l" s={{ pb: 'm', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
           <Timer />
           <Button onClick={onStartGame} isOutline>
-            { gameOver ? <FrownIcon size={18} /> : <SmileIcon size={18} /> }
+            { gameOver && !gameOver?.won ? <FrownIcon size={18} /> : <SmileIcon size={18} /> }
           </Button>
           <Text s={{ textAlign: 'center' }}>{ remainingBlocks }</Text>
         </Spacer>
