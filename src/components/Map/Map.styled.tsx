@@ -91,6 +91,7 @@ export const SMapMineThread = s.div(({ amount }: any) => ({
   justifyContent: 'center',
   color: threadColors[amount - 1],
   fontWeight: 'bold',
+  fontSize: '.9em'
 }))
 
 export const SMapMine = s.div(() => ({
