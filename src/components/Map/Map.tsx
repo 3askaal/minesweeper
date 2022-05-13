@@ -16,17 +16,11 @@ const getEmptySurroundingPositions = (grid: IGrid, { x, y }: IPosition, thread?:
     { x, y: y + 1 },
     { x: x - 1, y },
     { x: x + 1, y },
+    { x: x - 1, y: y - 1 },
+    { x: x + 1, y: y - 1 },
+    { x: x - 1, y: y + 1 },
+    { x: x + 1, y: y + 1 },
   ]
-
-  if (thread) {
-    surroundingPositions = [
-      ...surroundingPositions,
-      { x: x - 1, y: y - 1 },
-      { x: x + 1, y: y - 1 },
-      { x: x - 1, y: y + 1 },
-      { x: x + 1, y: y + 1 },
-    ]
-  }
 
   surroundingPositions = surroundingPositions
     .map((pos) => {
