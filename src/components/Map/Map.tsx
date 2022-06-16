@@ -40,6 +40,7 @@ export const Map = () => {
   const bindLongPress = useLongPress((e, { context }) => flag(context as IPosition));
 
   const getPositions = () => {
+    // console.log(grid && JSON.stringify(Object.values(grid).filter(({flag}) => flag)))
     return grid ? Object.values(grid) : []
   }
 
@@ -137,7 +138,7 @@ export const Map = () => {
           { (!gameOver || !position.mine) && (
             <SMapBlock
               key={`block-${index}`}
-              flagged={position.flag}
+              flag={position.flag}
               block={position.block}
               {...bindLongPress(position)}
               onClick={(e: React.MouseEvent) => onClick(e, position)}

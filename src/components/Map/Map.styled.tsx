@@ -37,7 +37,7 @@ export const SMap = s.div(({ theme, width, height, mode, gameOver }: any) => ({
   })
 }))
 
-export const SMapBlock = s.div(({ theme, block, flagged }: any) => ({
+export const SMapBlock = s.div(({ theme, block, flag }: any) => ({
   position: 'absolute',
   width: '100%',
   height: '100%',
@@ -59,7 +59,7 @@ export const SMapBlock = s.div(({ theme, block, flagged }: any) => ({
     pointerEvents: 'none',
   }),
 
-  ...(flagged && {
+  ...(flag && {
     // Light
     borderTopColor: chroma('#C9485B').brighten(1).hex(),
     borderRightColor: chroma('#C9485B').brighten(1).hex(),
@@ -68,7 +68,7 @@ export const SMapBlock = s.div(({ theme, block, flagged }: any) => ({
     // Dark
     borderLeftColor: chroma('#C9485B').darken(1).hex(),
     borderBottomColor: chroma('#C9485B').darken(1).hex(),
-  }),
+  })
 }))
 
 const threadColors = [
