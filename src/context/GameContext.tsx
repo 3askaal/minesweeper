@@ -30,13 +30,13 @@ export const GameProvider = ({ children }: any) => {
   const [settings, setSettings] = useState({ mode: GAME_MODES.intermediate })
   const [grid, setGrid] = useState<IGrid | null>(null)
   const [gameActive, setGameActive] = useState(false)
-  const [gameOver, setGameOver] = useState<{ won: boolean } | null>(null)
+  const [gameResult, setGameResult] = useState<{ won: boolean } | null>(null)
   const [remainingBlocks, setRemainingBlocks] = useState<number | null>(null)
   const [currentTime, setCurrentTime] = useState<number>(0)
 
   const onStartGame = () => {
     setGrid(generateGrid(settings))
-    setGameOver(null)
+    setGameResult(null)
     setGameActive(false)
     setCurrentTime(0)
   }
@@ -50,14 +50,14 @@ export const GameProvider = ({ children }: any) => {
       setRemainingBlocks(newRemainingBlocks)
 
       if (!newRemainingBlocks) {
-        setGameOver({ won: true })
+        setGameResult({ won: true })
       }
     }
   }, [grid])
 
   useInterval(() => {
     setCurrentTime(currentTime + 1000)
-  }, (gameActive && !gameOver) ? 1000 : null)
+  }, (gameActive && !gameResult) ? 1000 : null)
 
   return (
     <GameContext.Provider
@@ -67,8 +67,8 @@ export const GameProvider = ({ children }: any) => {
         setSettings,
         grid,
         setGrid,
-        gameOver,
-        setGameOver,
+        gameResult,
+        setGameResult,
         remainingBlocks,
         setRemainingBlocks,
         currentTime,

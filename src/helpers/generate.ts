@@ -6,14 +6,11 @@ export const generateEasterEgg = ({ mode }: ISettings) => {
   const positionAmount = (mode.width * mode.height)
 
   const mines = [ { x: 5, y: 4, }, { x: 6, y: 4, }, { x: 9, y: 4, }, { x: 10, y: 4, }, { x: 4, y: 5, }, { x: 7, y: 5, }, { x: 8, y: 5, }, { x: 11, y: 5, }, { x: 3, y: 6, }, { x: 12, y: 6, }, { x: 3, y: 7, }, { x: 12, y: 7, }, { x: 3, y: 8, }, { x: 12, y: 8, }, { x: 4, y: 9, }, { x: 11, y: 9, }, { x: 5, y: 10, }, { x: 10, y: 10, }, { x: 6, y: 11, }, { x: 9, y: 11, }, { x: 7, y: 12, }, { x: 8, y: 12, } ]
-  // const freeSpaces = [ { x: 5, y: 5 }, { x: 6, y: 5 }, { x: 9, y: 5 }, { x: 10, y: 5 }, { x: 4, y: 6 }, { x: 5, y: 6 }, { x: 6, y: 6 }, { x: 7, y: 6 }, { x: 8, y: 6 }, { x: 9, y: 6 }, { x: 10, y: 6 }, { x: 11, y: 6 }, { x: 4, y: 7 }, { x: 5, y: 7 }, { x: 6, y: 7 }, { x: 7, y: 7 }, { x: 8, y: 7 }, { x: 9, y: 7 }, { x: 10, y: 7 }, { x: 11, y: 7 }, { x: 4, y: 8 }, { x: 5, y: 8 }, { x: 6, y: 8 }, { x: 7, y: 8 }, { x: 8, y: 8 }, { x: 9, y: 8 }, { x: 10, y: 8 }, { x: 11, y: 8 }, { x: 5, y: 9 }, { x: 6, y: 9 }, { x: 7, y: 9 }, { x: 8, y: 9 }, { x: 9, y: 9 }, { x: 10, y: 9 }, { x: 6, y: 10 }, { x: 7, y: 10 }, { x: 8, y: 10 }, { x: 9, y: 10 }, { x: 7, y: 11 }, { x: 8, y: 11 } ]
 
   times(positionAmount, (i) => {
     const y = (i - (i % mode.width)) / mode.height
     const x = i % (mode.width)
-
     const isMine = !!mines.find(({ x: mineX, y: mineY }) =>  x === mineX && y === mineY)
-    // const isFree = freeSpaces.find(({ x: freeSpaceX, y: freeSpaceY }) =>  x === freeSpaceX && y === freeSpaceY)
 
     newGrid[`${x}/${y}`] = { x, y, block: true, mine: isMine }
   })
