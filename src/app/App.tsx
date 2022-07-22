@@ -21,11 +21,11 @@ const App = () => {
         <LocalGlobalStyle />
         <Router history={history}>
           <Switch>
-            <GameProvider>
-              <Route exact path="/">
+            <Route exact path="/">
+              <GameProvider>
                 <PlayView />
-              </Route>
-            </GameProvider>
+              </GameProvider>
+            </Route>
           </Switch>
         </Router>
       </SApp>

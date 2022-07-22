@@ -1,33 +1,16 @@
-import React, { useCallback, useContext, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import { Box } from '3oilerplate'
 import { SMap, SMapBlock, SMapMine, SMapMineThread } from './Map.styled'
-import { GameContext } from '../../context'
-import { useLongPress } from 'use-long-press';
-import { IGrid, IPosition } from '../../types';
-import { flag, reveal } from '../../helpers/grid'
+import { useLongPress } from 'use-long-press'
+import { flag } from '../../helpers/grid'
+import { IGrid, IPosition } from '../../types'
 
-export const Map = () => {
-  const { grid, setGrid, gameActive, setGameActive, gameResult, setGameResult, settings } = useContext(GameContext)
-  const bindLongPress = useLongPress((e, { context }) => flag(grid as IGrid, context as IPosition));
-
+export const Map = ({ grid, gameResult, settings, onClick }: any) => {
   const blockSizeX = 100 / settings.mode.width
   const blockSizeY = 100 / settings.mode.height
   const positions = useMemo(() => Object.values(grid || {}), [grid])
 
-  const onClick = (e: React.MouseEvent, block: IPosition) => {
-    if (!grid) return
-
-    if (!gameActive) {
-      setGameActive(true)
-    }
-
-    const [newGrid, gameOver] = e.shiftKey ? flag(grid, block) : block.flag ? flag(grid, block) : reveal(grid, block)
-    setGrid(newGrid)
-
-    if (gameOver) {
-      setGameResult({ won: false })
-    }
-  }
+  const bindLongPress = useLongPress((e, { context }) => flag(grid as IGrid, context as IPosition));
 
   return (
     <SMap mode={settings.mode} gameOver={!!gameResult}>

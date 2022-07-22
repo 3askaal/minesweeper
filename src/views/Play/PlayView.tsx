@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { memo, useContext, useEffect } from 'react'
 import { Container, Wrapper, Button, Text, Spacer, Popup } from '3oilerplate'
 import { Smile as SmileIcon, Frown as FrownIcon } from 'react-feather'
 import { Map, Timer } from '../../components'
@@ -7,7 +7,7 @@ import { useKeyboardBindings } from '../../helpers/keyboard'
 import ReactGA4 from 'react-ga4'
 
 const PlayView = () => {
-  const { onStartGame, gameResult, remainingBlocks, settings } = useContext(GameContext)
+  const { grid, onClick, onStartGame, gameResult, remainingBlocks, settings } = useContext(GameContext)
 
   useKeyboardBindings()
 
@@ -46,7 +46,7 @@ const PlayView = () => {
           </Button>
           <Text s={{ textAlign: 'center' }}>{ remainingBlocks }</Text>
         </Spacer>
-        <Map />
+        <Map grid={grid} gameResult={gameResult} settings={settings} onClick={onClick} />
       </Container>
       { gameResult?.won && (
         <Popup

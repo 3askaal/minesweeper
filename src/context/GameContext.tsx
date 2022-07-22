@@ -1,13 +1,13 @@
-import React, { createContext, useEffect, useState } from 'react'
+import React, { createContext, memo, useCallback, useEffect, useState } from 'react'
+import { useIntervalWhen } from 'rooks';
 import { IGameMode, IGrid, IPosition, ISettings } from '../types';
 import { generateGrid } from '../helpers/generate';
-import { useInterval } from '../helpers/interval';
+import { flag, reveal } from '../helpers/grid';
 
 interface GameContextType {
   settings: ISettings;
   grid: IGrid | null;
   remainingBlocks: number | null;
-  currentTime: number | null;
   [key: string]: any;
 }
 
@@ -32,13 +32,15 @@ export const GameProvider = ({ children }: any) => {
   const [gameActive, setGameActive] = useState(false)
   const [gameResult, setGameResult] = useState<{ won: boolean } | null>(null)
   const [remainingBlocks, setRemainingBlocks] = useState<number | null>(null)
-  const [currentTime, setCurrentTime] = useState<number>(0)
+  const [startTime, setStartTime] = useState<number | null>(null)
+  const [endTime, setEndTime] = useState<number | null>(null)
 
   const onStartGame = () => {
     setGrid(generateGrid(settings))
     setGameResult(null)
     setGameActive(false)
-    setCurrentTime(0)
+    setStartTime(null)
+    setEndTime(null)
   }
 
   useEffect(() => {
@@ -55,9 +57,36 @@ export const GameProvider = ({ children }: any) => {
     }
   }, [grid])
 
-  useInterval(() => {
-    setCurrentTime(currentTime + 1000)
-  }, (gameActive && !gameResult) ? 1000 : null)
+  useEffect(() => {
+    if (gameActive) {
+      setStartTime(Date.now())
+    } else {
+      setStartTime(null)
+    }
+  }, [gameActive])
+
+  useEffect(() => {
+    if (gameResult) {
+      setEndTime(Date.now())
+    } else {
+      setEndTime(null)
+    }
+  }, [gameResult])
+
+  const onClick = (e: React.MouseEvent, block: IPosition) => {
+    if (!grid) return
+
+    if (!gameActive) {
+      setGameActive(true)
+    }
+
+    const [newGrid, gameOver] = e.shiftKey ? flag(grid, block) : block.flag ? flag(grid, block) : reveal(grid, block)
+    setGrid(newGrid)
+
+    if (gameOver) {
+      setGameResult({ won: false })
+    }
+  }
 
   return (
     <GameContext.Provider
@@ -71,9 +100,12 @@ export const GameProvider = ({ children }: any) => {
         setGameResult,
         remainingBlocks,
         setRemainingBlocks,
-        currentTime,
-        setCurrentTime,
-        setGameActive
+        startTime,
+        setStartTime,
+        endTime,
+        setEndTime,
+        setGameActive,
+        onClick
       }}
     >
       {children}

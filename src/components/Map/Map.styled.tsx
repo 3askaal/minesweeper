@@ -1,7 +1,7 @@
 import { s } from '3oilerplate'
 import chroma from 'chroma-js'
 
-export const SMap = s.div(({ theme, width, height, mode, gameOver }: any) => ({
+export const SMap = s.div(({ mode, gameOver }: any) => ({
   display: 'flex',
   flexWrap: 'wrap',
   position: 'relative',
